@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidAlbum</string>
+    <string name="local_album">手机本地相册</string>
+    <string name="load_net_image">网络图片加载</string>
 </resources>
