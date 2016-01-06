@@ -12,11 +12,5 @@
         android:id="@+id/btn_method_01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="获取路径（方法一）" />
-
-    <Button
-        android:id="@+id/btn_method_02"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="获取路径（方法二）" />
+        android:text="获取路径" />
 </LinearLayout>
