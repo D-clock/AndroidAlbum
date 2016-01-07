@@ -9,8 +9,10 @@ import com.clock.album.R;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * 系统相册页面
@@ -51,5 +53,27 @@ public class SystemAlbumActivity extends AppCompatActivity implements View.OnCli
             };
         }
         return fileList;
+    }
+
+    private Collection<File> listFiles(File directory, FilenameFilter[] filter, int recurse) {
+        Vector<File> fileVector = new Vector<File>();
+        File[] fileEntries = directory.listFiles();
+        if (fileEntries != null) {
+            for (File fileEntry : fileEntries) {
+
+                for (FilenameFilter filenameFilter : filter) {
+                    if (filenameFilter.accept(directory, fileEntry.getName())) {
+                        fileVector.add(fileEntry);
+                    }
+                }
+
+                if (recurse <= -1 || (recurse > 0 && fileEntry.isDirectory())) {
+                    recurse--;
+                    fileVector.addAll(listFiles(fileEntry, filter, recurse));
+                    recurse++;
+                }
+            }
+        }
+        return fileVector;
     }
 }
