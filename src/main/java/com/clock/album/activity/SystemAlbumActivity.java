@@ -1,6 +1,8 @@
 package com.clock.album.activity;
 
 import android.content.res.Resources;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,8 +41,7 @@ public class SystemAlbumActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private LinkedList<String> findFiles() {
-        LinkedList<String> fileList = new LinkedList<String>();
+    private FilenameFilter[] getFilenameFilter() {
         String[] imageTypes = getResources().getStringArray(R.array.imageType);
         FilenameFilter[] filenameFilters = new FilenameFilter[imageTypes.length];
         for (int imageTypePos = 0; imageTypePos < imageTypes.length; imageTypePos++) {
@@ -52,10 +53,10 @@ public class SystemAlbumActivity extends AppCompatActivity implements View.OnCli
                 }
             };
         }
-        return fileList;
+        return filenameFilters;
     }
 
-    private Collection<File> listFiles(File directory, FilenameFilter[] filter, int recurse) {
+    private Collection<File> listFiles(File directory, FilenameFilter[] filter) {
         Vector<File> fileVector = new Vector<File>();
         File[] fileEntries = directory.listFiles();
         if (fileEntries != null) {
@@ -67,10 +68,8 @@ public class SystemAlbumActivity extends AppCompatActivity implements View.OnCli
                     }
                 }
 
-                if (recurse <= -1 || (recurse > 0 && fileEntry.isDirectory())) {
-                    recurse--;
-                    fileVector.addAll(listFiles(fileEntry, filter, recurse));
-                    recurse++;
+                if (fileEntry.isDirectory()) {
+                    fileVector.addAll(listFiles(fileEntry, filter));
                 }
             }
         }
