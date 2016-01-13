@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
-        android:id="@+id/btn_method_01"
+        android:id="@+id/btn_get_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="获取路径" />
