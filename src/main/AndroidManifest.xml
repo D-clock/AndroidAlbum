@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SystemAlbumActivity"
+            android:name=".activity.AlbumActivity"
             android:label="@string/local_album" />
     </application>
 

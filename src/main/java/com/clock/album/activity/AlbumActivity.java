@@ -1,10 +1,10 @@
 package com.clock.album.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.clock.album.R;
+import com.clock.album.activity.base.BaseActivity;
 
 /**
  * 系统相册页面
@@ -12,7 +12,7 @@ import com.clock.album.R;
  * @author Clock
  * @since 2016-01-06
  */
-public class SystemAlbumActivity extends AppCompatActivity implements View.OnClickListener {
+public class AlbumActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
