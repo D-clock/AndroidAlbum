@@ -20,6 +20,7 @@
         </activity>
         <activity
             android:name=".activity.AlbumActivity"
+            android:theme="@style/AlbumTheme"
             android:label="@string/local_album" />
     </application>
 
