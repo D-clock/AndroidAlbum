@@ -25,15 +25,14 @@
             android:layout_centerInParent="true"
             android:maxWidth="200dp"
             android:singleLine="true"
-            android:text="全部图片"
+            android:text="@string/all_image"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <GridView
-        android:id="@+id/gv_album"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="3" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
