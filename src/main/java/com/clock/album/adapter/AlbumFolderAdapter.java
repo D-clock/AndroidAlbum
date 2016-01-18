@@ -1,7 +1,5 @@
 package com.clock.album.adapter;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,12 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.clock.album.R;
-import com.clock.album.activity.AlbumActivity;
 import com.clock.album.entity.AlbumInfo;
-import com.clock.utils.text.StringUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
+import com.clock.album.imageloader.ImageLoaderWrapper;
 
 import java.io.File;
 import java.util.List;
@@ -28,10 +22,12 @@ public class AlbumFolderAdapter extends BaseAdapter {
 
     private List<AlbumInfo> mAlbumInfoList;
     private Map<String, File> mFrontImageMap;
+    private ImageLoaderWrapper mImageLoaderWrapper;
 
-    public AlbumFolderAdapter(List<AlbumInfo> folderList, Map<String, File> frontImageMap) {
+    public AlbumFolderAdapter(List<AlbumInfo> folderList, Map<String, File> frontImageMap, ImageLoaderWrapper imageLoaderWrapper) {
         this.mAlbumInfoList = folderList;
         this.mFrontImageMap = frontImageMap;
+        this.mImageLoaderWrapper = imageLoaderWrapper;
     }
 
     @Override
@@ -68,22 +64,13 @@ public class AlbumFolderAdapter extends BaseAdapter {
 
         }
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.img_default)
-                .showImageForEmptyUri(R.mipmap.img_error)
-                .showImageOnFail(R.mipmap.img_error)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
         AlbumInfo albumInfo = mAlbumInfoList.get(position);
         File folder = albumInfo.getFolder();
         String key = folder.getAbsolutePath();
-        String frontImagePath = mFrontImageMap.get(key).getAbsolutePath();
-        String uri = ImageDownloader.Scheme.FILE.wrap(frontImagePath);
-        ImageLoader.getInstance().loadImage(uri, options, null);
-        ImageLoader.getInstance().displayImage(uri, holder.ivAlbumCover, options);
+        ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
+        displayOption.loadingResId = R.mipmap.img_default;
+        displayOption.loadErrorResId = R.mipmap.img_error;
+        mImageLoaderWrapper.displayImage(holder.ivAlbumCover, mFrontImageMap.get(key), displayOption);
 
         holder.tvDirectoryName.setText(folder.getName());
         holder.tvChildCount.setText(albumInfo.getFileCount() + "");

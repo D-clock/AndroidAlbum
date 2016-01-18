@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.clock.album.R;
+import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.utils.common.RuleUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,9 +25,11 @@ import java.util.List;
 public class AlbumGridAdapter extends BaseAdapter {
 
     private List<File> mImageFileList;
+    private ImageLoaderWrapper mImageLoaderWrapper;
 
-    public AlbumGridAdapter(List<File> imageFileList) {
+    public AlbumGridAdapter(List<File> imageFileList, ImageLoaderWrapper imageLoaderWrapper) {
         this.mImageFileList = imageFileList;
+        this.mImageLoaderWrapper = imageLoaderWrapper;
     }
 
     @Override
@@ -66,19 +69,11 @@ public class AlbumGridAdapter extends BaseAdapter {
             holder = (AlbumViewHolder) convertView.getTag();
 
         }
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.img_default)
-                .showImageForEmptyUri(R.mipmap.img_error)
-                .showImageOnFail(R.mipmap.img_error)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
         File imageFile = mImageFileList.get(position);
-        String imagePath = imageFile.getAbsolutePath();
-        String uri = ImageDownloader.Scheme.FILE.wrap(imagePath);
-        ImageLoader.getInstance().displayImage(uri, holder.albumItem, options);
+        ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
+        displayOption.loadingResId = R.mipmap.img_default;
+        displayOption.loadErrorResId = R.mipmap.img_error;
+        mImageLoaderWrapper.displayImage(holder.albumItem, imageFile, displayOption);
         return convertView;
     }
 

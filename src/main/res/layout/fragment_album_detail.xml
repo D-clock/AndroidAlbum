@@ -6,6 +6,7 @@
         android:id="@+id/gv_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
         android:horizontalSpacing="2dp"
         android:numColumns="3"
         android:stretchMode="columnWidth"

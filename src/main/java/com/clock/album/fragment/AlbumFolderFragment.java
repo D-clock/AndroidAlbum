@@ -12,7 +12,9 @@ import android.widget.ListView;
 import com.clock.album.R;
 import com.clock.album.adapter.AlbumFolderAdapter;
 import com.clock.album.entity.AlbumInfo;
-import com.clock.utils.text.StringUtils;
+import com.clock.album.imageloader.ImageLoaderFactory;
+import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.imageloader.UniversalAndroidImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,7 +76,8 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_album_directory, container, false);
         mFolderListView = (ListView) rootView.findViewById(R.id.list_album);
-        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, mFrontImageMap);
+        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, mFrontImageMap, loaderWrapper);
         mFolderListView.setAdapter(albumFolderAdapter);
         mFolderListView.setOnItemClickListener(this);
         return rootView;

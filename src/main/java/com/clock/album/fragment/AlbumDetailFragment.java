@@ -9,6 +9,9 @@ import android.widget.GridView;
 
 import com.clock.album.R;
 import com.clock.album.adapter.AlbumGridAdapter;
+import com.clock.album.imageloader.ImageLoaderFactory;
+import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.imageloader.UniversalAndroidImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +64,8 @@ public class AlbumDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
-        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageFileList);
+        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageFileList, loaderWrapper);
         mAlbumGridView.setAdapter(albumGridAdapter);
         return rootView;
     }
