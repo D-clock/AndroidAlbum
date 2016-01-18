@@ -1,6 +1,7 @@
 package com.clock.album.adapter;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.clock.album.R;
-import com.clock.album.entity.ImageInfo;
+import com.clock.album.activity.AlbumActivity;
+import com.clock.album.entity.AlbumInfo;
 import com.clock.utils.text.StringUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,25 +26,25 @@ import java.util.Map;
  */
 public class AlbumFolderAdapter extends BaseAdapter {
 
-    private List<String> mFolderList;
-    private Map<String, ImageInfo> mFrontImageMap;
+    private List<AlbumInfo> mAlbumInfoList;
+    private Map<String, File> mFrontImageMap;
 
-    public AlbumFolderAdapter(List<String> folderList, Map<String, ImageInfo> frontImageMap) {
-        this.mFolderList = folderList;
+    public AlbumFolderAdapter(List<AlbumInfo> folderList, Map<String, File> frontImageMap) {
+        this.mAlbumInfoList = folderList;
         this.mFrontImageMap = frontImageMap;
     }
 
     @Override
     public int getCount() {
-        if (mFolderList == null) {
+        if (mAlbumInfoList == null) {
             return 0;
         }
-        return mFolderList.size();
+        return mAlbumInfoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mFolderList.get(position);
+        return mAlbumInfoList.get(position);
     }
 
     @Override
@@ -75,18 +77,16 @@ public class AlbumFolderAdapter extends BaseAdapter {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        String folderName = mFolderList.get(position);
-        String folderNameMd5 = StringUtils.md5(folderName);
-        String imagePath = mFrontImageMap.get(folderNameMd5).getFile().getAbsolutePath();
-        String uri = ImageDownloader.Scheme.FILE.wrap(imagePath);
+        AlbumInfo albumInfo = mAlbumInfoList.get(position);
+        File folder = albumInfo.getFolder();
+        String key = folder.getAbsolutePath();
+        String frontImagePath = mFrontImageMap.get(key).getAbsolutePath();
+        String uri = ImageDownloader.Scheme.FILE.wrap(frontImagePath);
         ImageLoader.getInstance().loadImage(uri, options, null);
         ImageLoader.getInstance().displayImage(uri, holder.ivAlbumCover, options);
 
-        File directory = new File(folderName);
-        holder.tvDirectoryName.setText(directory.getName());
-
-        int childCount = directory.listFiles().length;
-        holder.tvChildCount.setText(childCount + "");
+        holder.tvDirectoryName.setText(folder.getName());
+        holder.tvChildCount.setText(albumInfo.getFileCount() + "");
 
         return convertView;
     }

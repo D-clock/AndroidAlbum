@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.clock.album.R;
-import com.clock.album.entity.ImageInfo;
 import com.clock.utils.common.RuleUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,23 +23,23 @@ import java.util.List;
  */
 public class AlbumGridAdapter extends BaseAdapter {
 
-    private List<ImageInfo> mImageInfoList;
+    private List<File> mImageFileList;
 
-    public AlbumGridAdapter(List<ImageInfo> imageInfoList) {
-        this.mImageInfoList = imageInfoList;
+    public AlbumGridAdapter(List<File> imageFileList) {
+        this.mImageFileList = imageFileList;
     }
 
     @Override
     public int getCount() {
-        if (mImageInfoList == null) {
+        if (mImageFileList == null) {
             return 0;
         }
-        return mImageInfoList.size();
+        return mImageFileList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mImageInfoList.get(position);
+        return mImageFileList.get(position);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class AlbumGridAdapter extends BaseAdapter {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        File imageFile = mImageInfoList.get(position).getFile();
+        File imageFile = mImageFileList.get(position);
         String imagePath = imageFile.getAbsolutePath();
         String uri = ImageDownloader.Scheme.FILE.wrap(imagePath);
         ImageLoader.getInstance().displayImage(uri, holder.albumItem, options);

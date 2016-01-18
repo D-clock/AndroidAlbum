@@ -9,8 +9,8 @@ import android.widget.GridView;
 
 import com.clock.album.R;
 import com.clock.album.adapter.AlbumGridAdapter;
-import com.clock.album.entity.ImageInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -26,20 +26,20 @@ public class AlbumDetailFragment extends Fragment {
     /**
      * 相册信息列表
      */
-    private ArrayList<ImageInfo> mImageInfoList;
+    private ArrayList<File> mImageFileList;
     /**
      * 相册视图控件
      */
     private GridView mAlbumGridView;
 
     /**
-     * @param imageInfoList 相册列表
+     * @param imageFileList 相册列表
      * @return
      */
-    public static AlbumDetailFragment newInstance(ArrayList<ImageInfo> imageInfoList) {
+    public static AlbumDetailFragment newInstance(ArrayList<File> imageFileList) {
         AlbumDetailFragment fragment = new AlbumDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, imageInfoList);
+        args.putSerializable(ARG_PARAM1, imageFileList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +52,7 @@ public class AlbumDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mImageInfoList = (ArrayList<ImageInfo>) getArguments().getSerializable(ARG_PARAM1);
+            mImageFileList = (ArrayList<File>) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -61,7 +61,7 @@ public class AlbumDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
-        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageInfoList);
+        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageFileList);
         mAlbumGridView.setAdapter(albumGridAdapter);
         return rootView;
     }
