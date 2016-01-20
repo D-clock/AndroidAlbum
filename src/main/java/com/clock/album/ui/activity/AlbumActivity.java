@@ -1,4 +1,4 @@
-package com.clock.album.activity;
+package com.clock.album.ui.activity;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,10 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.clock.album.R;
-import com.clock.album.activity.base.BaseActivity;
+import com.clock.album.ui.activity.base.BaseActivity;
 import com.clock.album.entity.AlbumInfo;
-import com.clock.album.fragment.AlbumDetailFragment;
-import com.clock.album.fragment.AlbumFolderFragment;
+import com.clock.album.ui.fragment.AlbumDetailFragment;
+import com.clock.album.ui.fragment.AlbumFolderFragment;
 
 import java.io.File;
 import java.util.ArrayList;

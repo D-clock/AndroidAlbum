@@ -1,7 +1,6 @@
-package com.clock.album.activity.base;
+package com.clock.album.ui.activity.base;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 

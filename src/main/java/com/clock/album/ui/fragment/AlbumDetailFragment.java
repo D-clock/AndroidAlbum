@@ -1,4 +1,4 @@
-package com.clock.album.fragment;
+package com.clock.album.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,6 @@ import com.clock.album.R;
 import com.clock.album.adapter.AlbumGridAdapter;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
-import com.clock.album.imageloader.UniversalAndroidImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;

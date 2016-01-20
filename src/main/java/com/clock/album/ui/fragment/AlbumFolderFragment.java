@@ -1,4 +1,4 @@
-package com.clock.album.fragment;
+package com.clock.album.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import com.clock.album.adapter.AlbumFolderAdapter;
 import com.clock.album.entity.AlbumInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
-import com.clock.album.imageloader.UniversalAndroidImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,8 +29,6 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    public static final String ALL_IMAGE = "allImage";
 
     private OnAlbumDetailInteractionListener mInteractionListener;
     /**

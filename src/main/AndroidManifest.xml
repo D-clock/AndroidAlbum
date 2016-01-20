@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.AlbumActivity"
+            android:name=".ui.activity.AlbumActivity"
             android:label="@string/local_album"
             android:theme="@style/AlbumTheme" />
     </application>
