@@ -40,12 +40,14 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
     /**
      * Loader的唯一ID号
      */
+    @Deprecated
     private final static int IMAGE_LOADER_ID = 1000;
     /**
      * 刷新相册目录
      */
     private final static int REFRESH_ALBUM_MSG_TYPE = 1;
 
+    @Deprecated
     private final static String[] IMAGE_PROJECTION = new String[]{
             MediaStore.Images.Media.DATA,//图片路径
             MediaStore.Images.Media.DISPLAY_NAME,//图片文件名，包括后缀名
@@ -122,6 +124,7 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    @Deprecated
     private LoaderManager.LoaderCallbacks<Cursor> mImageLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
