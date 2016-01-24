@@ -1,6 +1,5 @@
 package com.clock.album.adapter;
 
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -10,9 +9,6 @@ import android.widget.ImageView;
 import com.clock.album.R;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.utils.common.RuleUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.util.List;

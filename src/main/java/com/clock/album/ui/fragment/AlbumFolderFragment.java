@@ -17,7 +17,6 @@ import com.clock.album.imageloader.ImageLoaderWrapper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * 相册目录页面
