@@ -11,12 +11,15 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.clock.album.entity.AlbumInfo;
 import com.clock.album.ui.interaction.ImageScannerInteraction;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 图片扫描器
@@ -46,7 +49,9 @@ public class ImageScanner implements ImageScannerPresenter {
         public void handleMessage(Message msg) {
             ImageMessage imageMessage = (ImageMessage) msg.obj;
             if (imageMessage != null) {
-
+                if (imageMessage.interaction != null) {
+                    imageMessage.interaction.refreshImageInfo(imageMessage.albumFolderList, imageMessage.albumImageListMap);
+                }
             } else {
                 super.handleMessage(msg);
             }
@@ -97,6 +102,21 @@ public class ImageScanner implements ImageScannerPresenter {
                     albumImageFiles.add(imageFile);//添加到对应的相册目录下面
                 }
 
+                sortByFileLastModified(albumFolderList);//对图片目录做排序
+
+                Set<String> keySet = albumImageListMap.keySet();
+                for (String key : keySet) {//对图片目录下所有的图片文件做排序
+                    ArrayList<File> albumImageList = albumImageListMap.get(key);
+                    sortByFileLastModified(albumImageList);
+                }
+
+                Message message = mRefreshHandler.obtainMessage();
+                ImageMessage imageMessage = new ImageMessage();
+                imageMessage.albumFolderList = albumFolderList;
+                imageMessage.albumImageListMap = albumImageListMap;
+                imageMessage.interaction = interaction;
+                message.obj = imageMessage;
+                mRefreshHandler.sendMessage(message);
             }
 
             @Override
@@ -105,6 +125,23 @@ public class ImageScanner implements ImageScannerPresenter {
             }
         };
         return imageLoaderCallbacks;
+    }
+
+    /**
+     * 按照文件的修改时间进行排序，越最近修改的，排得越前
+     */
+    private void sortByFileLastModified(List<File> files) {
+        Collections.sort(files, new Comparator<File>() {
+            @Override
+            public int compare(File lhs, File rhs) {
+                if (lhs.lastModified() > rhs.lastModified()) {
+                    return -1;
+                } else if (lhs.lastModified() < rhs.lastModified()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
     }
 
     private static class ImageMessage {

@@ -16,6 +16,10 @@ public class AlbumInfo implements Serializable {
      */
     private File folder;
     /**
+     * 封面，相册的第一张图片
+     */
+    private File frontCover;
+    /**
      * 文件个数
      */
     private int fileCount;
@@ -36,6 +40,14 @@ public class AlbumInfo implements Serializable {
         this.folder = folder;
     }
 
+    public File getFrontCover() {
+        return frontCover;
+    }
+
+    public void setFrontCover(File frontCover) {
+        this.frontCover = frontCover;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,13 +56,15 @@ public class AlbumInfo implements Serializable {
         AlbumInfo albumInfo = (AlbumInfo) o;
 
         if (getFileCount() != albumInfo.getFileCount()) return false;
-        return getFolder().equals(albumInfo.getFolder());
+        if (!getFolder().equals(albumInfo.getFolder())) return false;
+        return getFrontCover().equals(albumInfo.getFrontCover());
 
     }
 
     @Override
     public int hashCode() {
         int result = getFolder().hashCode();
+        result = 31 * result + getFrontCover().hashCode();
         result = 31 * result + getFileCount();
         return result;
     }

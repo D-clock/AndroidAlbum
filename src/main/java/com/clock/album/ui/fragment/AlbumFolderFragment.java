@@ -28,17 +28,12 @@ import java.util.HashMap;
 public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private OnAlbumDetailInteractionListener mInteractionListener;
     /**
      * 相册目录列表
      */
     private ArrayList<AlbumInfo> mAlbumInfoList;
-    /**
-     * 每个文件夹下面的首张图片
-     */
-    private HashMap<String, File> mFrontImageMap;
     private ListView mFolderListView;
 
     public AlbumFolderFragment() {
@@ -46,15 +41,13 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
     }
 
     /**
-     * @param folderList    相册目录列表
-     * @param frontImageMap 每个相册目录下的第一张图片
+     * @param albumInfoList    相册目录列表
      * @return
      */
-    public static AlbumFolderFragment newInstance(ArrayList<AlbumInfo> folderList, HashMap<String, File> frontImageMap) {
+    public static AlbumFolderFragment newInstance(ArrayList<AlbumInfo> albumInfoList) {
         AlbumFolderFragment fragment = new AlbumFolderFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, folderList);
-        args.putSerializable(ARG_PARAM2, frontImageMap);
+        args.putSerializable(ARG_PARAM1, albumInfoList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +57,6 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mAlbumInfoList = (ArrayList<AlbumInfo>) getArguments().getSerializable(ARG_PARAM1);
-            mFrontImageMap = (HashMap<String, File>) getArguments().getSerializable(ARG_PARAM2);
         }
     }
 
@@ -74,7 +66,7 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
         View rootView = inflater.inflate(R.layout.fragment_album_directory, container, false);
         mFolderListView = (ListView) rootView.findViewById(R.id.list_album);
         ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
-        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, mFrontImageMap, loaderWrapper);
+        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, loaderWrapper);
         mFolderListView.setAdapter(albumFolderAdapter);
         mFolderListView.setOnItemClickListener(this);
         return rootView;

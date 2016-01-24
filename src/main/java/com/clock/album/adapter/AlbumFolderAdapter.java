@@ -21,12 +21,10 @@ import java.util.Map;
 public class AlbumFolderAdapter extends BaseAdapter {
 
     private List<AlbumInfo> mAlbumInfoList;
-    private Map<String, File> mFrontImageMap;
     private ImageLoaderWrapper mImageLoaderWrapper;
 
-    public AlbumFolderAdapter(List<AlbumInfo> folderList, Map<String, File> frontImageMap, ImageLoaderWrapper imageLoaderWrapper) {
+    public AlbumFolderAdapter(List<AlbumInfo> folderList, ImageLoaderWrapper imageLoaderWrapper) {
         this.mAlbumInfoList = folderList;
-        this.mFrontImageMap = frontImageMap;
         this.mImageLoaderWrapper = imageLoaderWrapper;
     }
 
@@ -70,7 +68,7 @@ public class AlbumFolderAdapter extends BaseAdapter {
         ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
         displayOption.loadingResId = R.mipmap.img_default;
         displayOption.loadErrorResId = R.mipmap.img_error;
-        mImageLoaderWrapper.displayImage(holder.ivAlbumCover, mFrontImageMap.get(key), displayOption);
+        mImageLoaderWrapper.displayImage(holder.ivAlbumCover, albumInfo.getFrontCover(), displayOption);
 
         holder.tvDirectoryName.setText(folder.getName());
         holder.tvChildCount.setText(albumInfo.getFileCount() + "");
