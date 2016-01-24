@@ -27,7 +27,8 @@ public class AlbumApplication extends Application {
      * 配置奔溃信息的搜集
      */
     private void configCollectCrashInfo() {
-        CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, APP_MAIN_FOLDER_NAME, CRASH_FOLDER_NAME, true);
+        CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, APP_MAIN_FOLDER_NAME, CRASH_FOLDER_NAME);
+        //crashExceptionHandler.configRemoteReport(null);
         Thread.setDefaultUncaughtExceptionHandler(crashExceptionHandler);
     }
 }
