@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".AlbumApplication"
@@ -22,8 +22,13 @@
         </activity>
         <activity
             android:name=".ui.activity.AlbumActivity"
-            android:label="@string/local_album"
+            android:label="@string/local_image_selector"
+            android:screenOrientation="portrait"
             android:theme="@style/AlbumTheme" />
+        <activity
+            android:name=".ui.activity.GalleryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GalleryTheme" />
     </application>
 
 </manifest>

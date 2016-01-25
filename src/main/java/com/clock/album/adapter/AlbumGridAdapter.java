@@ -1,5 +1,7 @@
 package com.clock.album.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -8,9 +10,11 @@ import android.widget.ImageView;
 
 import com.clock.album.R;
 import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.ui.activity.GalleryActivity;
 import com.clock.utils.common.RuleUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,6 +26,7 @@ public class AlbumGridAdapter extends BaseAdapter {
 
     private List<File> mImageFileList;
     private ImageLoaderWrapper mImageLoaderWrapper;
+    private View.OnClickListener mImageItemClickListener;
 
     public AlbumGridAdapter(List<File> imageFileList, ImageLoaderWrapper imageLoaderWrapper) {
         this.mImageFileList = imageFileList;
@@ -70,6 +75,23 @@ public class AlbumGridAdapter extends BaseAdapter {
         displayOption.loadingResId = R.mipmap.img_default;
         displayOption.loadErrorResId = R.mipmap.img_error;
         mImageLoaderWrapper.displayImage(holder.albumItem, imageFile, displayOption);
+
+        if (mImageItemClickListener == null) {
+            final Context context = parent.getContext();
+            mImageItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    File imageFile = (File) v.getTag();
+                    Intent galleryIntent = new Intent(context, GalleryActivity.class);
+                    galleryIntent.putExtra(GalleryActivity.EXTRA_SHOW_IMAGE, imageFile);
+                    galleryIntent.putExtra(GalleryActivity.EXTRA_SHOW_IMAGE_LIST, (Serializable) mImageFileList);
+                    context.startActivity(galleryIntent);
+                }
+            };
+        }
+        holder.albumItem.setTag(imageFile);
+        holder.albumItem.setOnClickListener(mImageItemClickListener);
+
         return convertView;
     }
 

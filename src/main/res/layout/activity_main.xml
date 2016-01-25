@@ -12,11 +12,12 @@
         android:id="@+id/btn_system_album"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/local_album" />
+        android:text="@string/local_image_selector" />
 
     <Button
         android:id="@+id/btn_image_loader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/load_net_image" />
+        android:text="@string/load_net_image"
+        android:visibility="gone" />
 </LinearLayout>
