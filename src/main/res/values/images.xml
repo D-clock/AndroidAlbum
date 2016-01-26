@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="imageType">
-        <item>png</item>
-        <item>jpg</item>
-        <item>jpeg</item>
-    </string-array>
-</resources>

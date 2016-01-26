@@ -20,4 +20,6 @@
         android:layout_height="wrap_content"
         android:text="@string/load_net_image"
         android:visibility="gone" />
+
+
 </LinearLayout>

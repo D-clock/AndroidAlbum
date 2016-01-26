@@ -6,14 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.clock.album.R;
+import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.activity.GalleryActivity;
+import com.clock.album.ui.fragment.AlbumDetailFragment;
 import com.clock.utils.common.RuleUtils;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,26 +27,30 @@ import java.util.List;
  */
 public class AlbumGridAdapter extends BaseAdapter {
 
-    private List<File> mImageFileList;
+    private List<ImageInfo> mImageInfoList;
     private ImageLoaderWrapper mImageLoaderWrapper;
     private View.OnClickListener mImageItemClickListener;
+    private CompoundButton.OnCheckedChangeListener mImageOnSelectedListener;
+    private AlbumDetailFragment.OnImageSelectedInteractionListener mOnImageSelectedInteractionListener;
 
-    public AlbumGridAdapter(List<File> imageFileList, ImageLoaderWrapper imageLoaderWrapper) {
-        this.mImageFileList = imageFileList;
+    public AlbumGridAdapter(List<ImageInfo> imageInfoList, ImageLoaderWrapper imageLoaderWrapper,
+                            AlbumDetailFragment.OnImageSelectedInteractionListener onImageSelectedInteractionListener) {
+        this.mImageInfoList = imageInfoList;
         this.mImageLoaderWrapper = imageLoaderWrapper;
+        this.mOnImageSelectedInteractionListener = onImageSelectedInteractionListener;
     }
 
     @Override
     public int getCount() {
-        if (mImageFileList == null) {
+        if (mImageInfoList == null) {
             return 0;
         }
-        return mImageFileList.size();
+        return mImageInfoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mImageFileList.get(position);
+        return mImageInfoList.get(position);
     }
 
     @Override
@@ -64,35 +71,70 @@ public class AlbumGridAdapter extends BaseAdapter {
             AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(gridEdgeLength, gridEdgeLength);
             convertView.setLayoutParams(layoutParams);
             holder.albumItem = (ImageView) convertView.findViewById(R.id.iv_album_item);
+            holder.imageSelectedCheckBox = (CheckBox) convertView.findViewById(R.id.ckb_image_select);
             convertView.setTag(holder);
 
         } else {
             holder = (AlbumViewHolder) convertView.getTag();
+            resetConvertView(holder);
 
         }
-        File imageFile = mImageFileList.get(position);
+
+        ImageInfo imageInfo = mImageInfoList.get(position);
         ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
         displayOption.loadingResId = R.mipmap.img_default;
         displayOption.loadErrorResId = R.mipmap.img_error;
-        mImageLoaderWrapper.displayImage(holder.albumItem, imageFile, displayOption);
+        mImageLoaderWrapper.displayImage(holder.albumItem, imageInfo.getImageFile(), displayOption);
+
+        holder.imageSelectedCheckBox.setChecked(imageInfo.isSelected());
+        if (mImageOnSelectedListener == null) {
+            mImageOnSelectedListener = new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ImageInfo imageInfo = (ImageInfo) buttonView.getTag();
+                    imageInfo.setIsSelected(isChecked);
+                    if (mOnImageSelectedInteractionListener != null) {
+                        if (isChecked) {
+                            mOnImageSelectedInteractionListener.onSelected(imageInfo.getImageFile());
+                        } else {
+                            mOnImageSelectedInteractionListener.onUnSelected(imageInfo.getImageFile());
+                        }
+                    }
+                }
+            };
+        }
+        holder.imageSelectedCheckBox.setTag(imageInfo);
+        holder.imageSelectedCheckBox.setOnCheckedChangeListener(mImageOnSelectedListener);//监听图片是否被选中的状态
 
         if (mImageItemClickListener == null) {
             final Context context = parent.getContext();
             mImageItemClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    File imageFile = (File) v.getTag();
+                    ImageInfo imageInfo = (ImageInfo) v.getTag();
                     Intent galleryIntent = new Intent(context, GalleryActivity.class);
-                    galleryIntent.putExtra(GalleryActivity.EXTRA_SHOW_IMAGE, imageFile);
-                    galleryIntent.putExtra(GalleryActivity.EXTRA_SHOW_IMAGE_LIST, (Serializable) mImageFileList);
+                    galleryIntent.putExtra(GalleryActivity.EXTRA_IMAGE_INFO, imageInfo);
+                    galleryIntent.putExtra(GalleryActivity.EXTRA_IMAGE_INFO_LIST, (Serializable) mImageInfoList);
                     context.startActivity(galleryIntent);
                 }
             };
         }
-        holder.albumItem.setTag(imageFile);
+
+        holder.albumItem.setTag(imageInfo);
         holder.albumItem.setOnClickListener(mImageItemClickListener);
 
         return convertView;
+    }
+
+    /**
+     * 重置缓存视图的初始状态
+     *
+     * @param viewHolder
+     */
+    private void resetConvertView(AlbumViewHolder viewHolder) {
+        viewHolder.imageSelectedCheckBox.setOnCheckedChangeListener(null);//先取消选择状态的监听
+        viewHolder.imageSelectedCheckBox.setChecked(false);
     }
 
     private static class AlbumViewHolder {
@@ -100,5 +142,9 @@ public class AlbumGridAdapter extends BaseAdapter {
          * 显示图片的位置
          */
         ImageView albumItem;
+        /**
+         * 图片选择按钮
+         */
+        CheckBox imageSelectedCheckBox;
     }
 }

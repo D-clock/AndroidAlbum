@@ -3,4 +3,6 @@
     <string name="local_image_selector">本地图片选择器</string>
     <string name="load_net_image">网络图片加载</string>
     <string name="all_image">全部图片</string>
+    <string name="selected_image">选中的图片</string>
+    <string name="selected_ok">确定 (%1$s/%2$s)</string>
 </resources>

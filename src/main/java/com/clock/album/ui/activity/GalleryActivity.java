@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clock.album.R;
+import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.activity.base.BaseActivity;
 
-import java.io.File;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
@@ -24,8 +24,8 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class GalleryActivity extends BaseActivity {
 
-    public final static String EXTRA_SHOW_IMAGE_LIST = "ShowImageList";
-    public final static String EXTRA_SHOW_IMAGE = "ShowImage";
+    public final static String EXTRA_IMAGE_INFO_LIST = "ImageInfoList";
+    public final static String EXTRA_IMAGE_INFO = "ImageInfo";
 
     private ViewPager mGalleryViewPager;
     private PagerAdapter mGalleryPagerAdapter;
@@ -33,11 +33,11 @@ public class GalleryActivity extends BaseActivity {
     /**
      * 所有图片的列表
      */
-    private List<File> mShowImageFileList;
+    private List<ImageInfo> mShowImageInfoList;
     /**
      * 刚进入页面显示的图片
      */
-    private File mShowImageFile;
+    private ImageInfo mShowImageInfo;
 
     private ImageLoaderWrapper mImageLoaderWrapper;
 
@@ -48,8 +48,8 @@ public class GalleryActivity extends BaseActivity {
 
         mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
 
-        mShowImageFile = (File) getIntent().getSerializableExtra(EXTRA_SHOW_IMAGE);
-        mShowImageFileList = (List<File>) getIntent().getSerializableExtra(EXTRA_SHOW_IMAGE_LIST);
+        mShowImageInfo = (ImageInfo) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO);
+        mShowImageInfoList = (List<ImageInfo>) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO_LIST);
 
         initView();
 
@@ -59,8 +59,8 @@ public class GalleryActivity extends BaseActivity {
         mGalleryViewPager = (ViewPager) findViewById(R.id.gallery_viewpager);
         mGalleryPagerAdapter = new GalleryPagerAdapter();
         mGalleryViewPager.setAdapter(mGalleryPagerAdapter);
-        if (mShowImageFile != null && mShowImageFileList != null && mShowImageFileList.contains(mShowImageFile)) {
-            int initShowPosition = mShowImageFileList.indexOf(mShowImageFile);
+        if (mShowImageInfo != null && mShowImageInfoList != null && mShowImageInfoList.contains(mShowImageInfo)) {
+            int initShowPosition = mShowImageInfoList.indexOf(mShowImageInfo);
             mGalleryViewPager.setCurrentItem(initShowPosition);
         }
     }
@@ -72,10 +72,10 @@ public class GalleryActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            if (mShowImageFileList == null) {
+            if (mShowImageInfoList == null) {
                 return 0;
             }
-            return mShowImageFileList.size();
+            return mShowImageInfoList.size();
         }
 
         @Override
@@ -89,12 +89,12 @@ public class GalleryActivity extends BaseActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             View galleryItemView = View.inflate(GalleryActivity.this, R.layout.gallery_item, null);
 
-            File imageFile = mShowImageFileList.get(position);
+            ImageInfo imageInfo = mShowImageInfoList.get(position);
             PhotoView galleryPhotoView = (PhotoView) galleryItemView.findViewById(R.id.iv_show_image);
             ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
             displayOption.loadErrorResId = R.mipmap.img_error;
             displayOption.loadingResId = R.mipmap.img_default;
-            mImageLoaderWrapper.displayImage(galleryPhotoView, imageFile, displayOption);
+            mImageLoaderWrapper.displayImage(galleryPhotoView, imageInfo.getImageFile(), displayOption);
 
             container.addView(galleryItemView);
             return galleryItemView;

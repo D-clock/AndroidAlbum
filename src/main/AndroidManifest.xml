@@ -29,6 +29,10 @@
             android:name=".ui.activity.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GalleryTheme" />
+        <activity
+            android:name=".ui.activity.ImageSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlbumTheme" />
     </application>
 
 </manifest>

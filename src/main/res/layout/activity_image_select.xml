@@ -19,34 +19,24 @@
             android:src="@mipmap/navi_back_icon" />
 
         <TextView
-            android:id="@+id/tv_dir_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/iv_back"
+            android:layout_centerInParent="true"
             android:maxWidth="200dp"
             android:singleLine="true"
-            android:text="@string/all_image"
+            android:text="@string/selected_image"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_selected_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="@string/selected_ok"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:visibility="gone" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <GridView
+        android:id="@+id/gv_image_selected"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:horizontalSpacing="2dp"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="2dp" />
 </LinearLayout>
