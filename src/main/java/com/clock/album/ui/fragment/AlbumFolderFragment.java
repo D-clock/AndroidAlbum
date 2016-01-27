@@ -2,7 +2,6 @@ package com.clock.album.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.clock.album.adapter.AlbumFolderAdapter;
 import com.clock.album.entity.AlbumInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.ui.fragment.base.BaseFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * @author Clock
  * @since 2016-01-17
  */
-public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     private static final String ARG_PARAM1 = "param1";
 
@@ -40,7 +40,7 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
     }
 
     /**
-     * @param albumInfoList    相册目录列表
+     * @param albumInfoList 相册目录列表
      * @return
      */
     public static AlbumFolderFragment newInstance(ArrayList<AlbumInfo> albumInfoList) {
@@ -77,8 +77,6 @@ public class AlbumFolderFragment extends Fragment implements AdapterView.OnItemC
         super.onAttach(context);
         if (context instanceof OnAlbumDetailInteractionListener) {
             mInteractionListener = (OnAlbumDetailInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 

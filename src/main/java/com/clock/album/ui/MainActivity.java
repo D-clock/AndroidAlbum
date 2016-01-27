@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.clock.album.R;
 import com.clock.album.ui.activity.AlbumActivity;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import junit.framework.Test;
 
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.btn_system_album).setOnClickListener(this);
-        //findViewById(R.id.btn_image_loader).setOnClickListener(this);
+        findViewById(R.id.btn_image_loader).setOnClickListener(this);
 
     }
 
@@ -26,11 +27,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int viewId = v.getId();
         if (viewId == R.id.btn_system_album) {//系统相册
+
             Intent albumIntent = new Intent(this, AlbumActivity.class);
             startActivity(albumIntent);
 
-        } /*else if (viewId == R.id.btn_image_loader) {//网络图片加载（各大加载图片框架的实现）
+        } else if (viewId == R.id.btn_image_loader) {//网络图片加载（各大加载图片框架的实现）
 
-        }*/
+        }
     }
 }

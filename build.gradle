@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly' //添加Bugly符号表插件
 
 android {
     compileSdkVersion 23
@@ -10,6 +11,10 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -29,8 +34,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile project(':androidutils')
+    compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile(name: 'photoview-release-1.2.4', ext: 'aar')
+}
+
+bugly{
+    appId = "900019014" //注册时分配的App ID
+    appKey = "2XQMAyk12EBhkUUa" //注册时分配的App Key
 }

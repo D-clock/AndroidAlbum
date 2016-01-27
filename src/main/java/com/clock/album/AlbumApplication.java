@@ -2,8 +2,10 @@ package com.clock.album;
 
 import android.app.Application;
 
+import com.clock.album.crash.CustomCrashReporter;
 import com.clock.album.imageloader.UniversalAndroidImageLoader;
 import com.clock.utils.crash.CrashExceptionHandler;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * Created by Clock on 2016/1/17.
@@ -23,10 +25,14 @@ public class AlbumApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //此处用于配置本地生成闪退的日志文件，需要在其他第三方上报crash log类型的sdk初始化之前，
+        // 进行初始化。否则会导致第三方的SDK无法上报crash log
         configCollectCrashInfo();
 
-        Thread.getDefaultUncaughtExceptionHandler();
+        initBuglyConfig();
+
         UniversalAndroidImageLoader.init(getApplicationContext());
+
     }
 
     /**
@@ -34,12 +40,15 @@ public class AlbumApplication extends Application {
      */
     private void configCollectCrashInfo() {
         CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, APP_MAIN_FOLDER_NAME, CRASH_FOLDER_NAME);
-        crashExceptionHandler.configRemoteReport(new CrashExceptionHandler.CrashExceptionRemoteReport() {
-            @Override
-            public void onCrash(Throwable ex) {
-
-            }
-        }); //设置报错日志回传到远程服务器上
+        CrashExceptionHandler.CrashExceptionRemoteReport remoteReport = new CustomCrashReporter();
+        crashExceptionHandler.configRemoteReport(remoteReport); //设置友盟统计报错日志回传到远程服务器上
         Thread.setDefaultUncaughtExceptionHandler(crashExceptionHandler);
+    }
+
+    /**
+     * 初始化bugly的设置
+     */
+    private void initBuglyConfig() {
+        CrashReport.initCrashReport(getApplicationContext(), "900019014", false);
     }
 }

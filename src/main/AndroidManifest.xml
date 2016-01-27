@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".AlbumApplication"
@@ -13,6 +17,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,19 +25,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activity.AlbumActivity"
             android:label="@string/local_image_selector"
             android:screenOrientation="portrait"
             android:theme="@style/AlbumTheme" />
+
         <activity
             android:name=".ui.activity.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GalleryTheme" />
+
         <activity
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AlbumTheme" />
+
     </application>
 
 </manifest>

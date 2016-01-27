@@ -2,13 +2,15 @@
 
 库如其名，做过企业的应用已经有三四个，但凡所有应用基本都有跳转到相册或者调用系统拍照的功能（例如所有应用都可以上传头像）。因此，为了方便公司或者自己的开发，抽空准备整理出一个比较完善的库，方便以后开发可以随时拉取代码。如果你对这部分的代码感兴趣，欢迎引入使用，如果引用过程中发现遇到什么闪退，麻烦在Github上给我提个issue，我会尽快定位修复。
 
-## 目前已有功能（最后编辑于2016-01-26）
+## 目前已有功能（最后编辑于2016-01-27）
 
 - 展示系统所有带图片的目录，以及展示图片目录下所有图片
 
 - 点击图片预览大图功能，支持左右滑动切换和缩放功能
 
-- 闪退日志本地化存储功能。
+- 闪退日志本地化存储功能，方便开发者本地查看
+
+- 腾讯bugly SDK的引入，用于上报crash的日志，方便远程定位错误
 
 ## 目前的效果
 
@@ -18,8 +20,6 @@
 
 
 ## 接下来想做的
-
-- 添加友盟或其他第三方的闪退bug统计搜集功能（2016-01月底前完成）
 
 - 为当前项目写一篇技术心得总结（2016-01月底前完成）
 
@@ -41,6 +41,10 @@
 
 ![配置log回传服务器](http://h.hiphotos.baidu.com/image/pic/item/dbb44aed2e738bd494f0643fa68b87d6267ff9ef.jpg)
 
+**3.第三方上报crash功能的SDK引入**
+
+> 目前已经引入大鹅厂的[Bugly](http://bugly.qq.com/)（不得不佩服鹅厂的科技，真心牛逼）。这里引入第三方SDK仅仅只是为了跟踪一些BUG，并没有其他意图，不需要的童鞋可以自行移除掉。
+
 ## 引用第三方库
 
 - 图片加载框架：[Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
@@ -54,3 +58,31 @@
 - 为了方便项目的拓展，对引入的一些第三方库进行多加一层的抽象封装。如：当前库中引用的加载图片框架采用了[Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)，为了降低项目对具体载图框架的依赖，特地使用工厂模式且加多了一层ImageLoaderWrapper对框架进行抽象解耦，这样为我后续替换其他加载图片框架节约了修改代码的成本。
 
 - 项目的编码设计采用了MVP架构，尽量的分离业务和UI，使得UI层的Activity和Fragment和业务层的代码显得松耦合。 
+
+## 编译须知
+
+* 因为该开源项目引入了Bugly的SDK，所以在导入AndroidStudio时候，需要在Project的build.gradle加上如下配置
+
+``` groovy
+ classpath 'com.tencent.bugly:symtabfileuploader:latest.release'
+```
+
+![配置build.gradle](http://e.hiphotos.baidu.com/image/pic/item/8601a18b87d6277f529944492f381f30e924fc3c.jpg)
+
+如果因为gradle版本太高，会在build过程中提示下面这种错误
+
+``` groovy
+Error: NDK integration is deprecated in the current plugin.  Consider trying the new experimental plugin.....
+```
+
+所以，你还要到Project的gradle.properties文件中加上 **android.useDeprecatedNdk=true**
+
+![配置gradle.properties](http://e.hiphotos.baidu.com/image/pic/item/5366d0160924ab1803d8904632fae6cd7a890bf0.jpg)
+
+至于其他关于bugly的问题，就需要自己去官网找答案了！
+
+* 目前，为方便个人开发修改和复用，一些实用工具类代码都整合到我的[AndroidUtils](https://github.com/D-clock/AndroidUtils)项目中。所以需要clone该库的代码导入IDE，作为AndroidAlbum的Library！
+
+* 当前导入的[Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)框架，版本是1.9.5，是以jar包的方式导入。
+
+* [PhotoView](https://github.com/chrisbanes/PhotoView)自定义控件的版本是1.2.4,以aar的方式导入。

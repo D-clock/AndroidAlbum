@@ -2,7 +2,6 @@ package com.clock.album.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.clock.album.adapter.AlbumGridAdapter;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.ui.fragment.base.BaseFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author Clock
  * @since 2016-01-17
  */
-public class AlbumDetailFragment extends Fragment {
+public class AlbumDetailFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
 
@@ -78,8 +78,8 @@ public class AlbumDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof OnImageSelectedInteractionListener) {
-            mOnImageSelectedInteractionListener = (OnImageSelectedInteractionListener) getActivity();
+        if (context instanceof OnImageSelectedInteractionListener) {
+            mOnImageSelectedInteractionListener = (OnImageSelectedInteractionListener) context;
         }
     }
 
