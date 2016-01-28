@@ -2,7 +2,7 @@ package com.clock.album;
 
 import android.app.Application;
 
-import com.clock.album.crash.CustomCrashReporter;
+import com.clock.album.crash.SimpleCrashReporter;
 import com.clock.album.imageloader.UniversalAndroidImageLoader;
 import com.clock.utils.crash.CrashExceptionHandler;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -40,13 +40,13 @@ public class AlbumApplication extends Application {
      */
     private void configCollectCrashInfo() {
         CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, APP_MAIN_FOLDER_NAME, CRASH_FOLDER_NAME);
-        CrashExceptionHandler.CrashExceptionRemoteReport remoteReport = new CustomCrashReporter();
+        CrashExceptionHandler.CrashExceptionRemoteReport remoteReport = new SimpleCrashReporter();
         crashExceptionHandler.configRemoteReport(remoteReport); //设置友盟统计报错日志回传到远程服务器上
         Thread.setDefaultUncaughtExceptionHandler(crashExceptionHandler);
     }
 
     /**
-     * 初始化bugly的设置
+     * 初始化bugly的设置（关于bugly的详细使用，可以看官方开发者文档）
      */
     private void initBuglyConfig() {
         CrashReport.initCrashReport(getApplicationContext(), "900019014", false);

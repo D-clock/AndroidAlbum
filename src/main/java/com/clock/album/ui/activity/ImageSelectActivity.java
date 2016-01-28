@@ -87,7 +87,7 @@ public class ImageSelectActivity extends BaseActivity implements View.OnClickLis
 
                 AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(gridEdgeLength, gridEdgeLength);
                 convertView.setLayoutParams(layoutParams);
-                holder.selectedImageView = (ImageView) convertView.findViewById(R.id.iv_seleted_item);
+                holder.selectedImageView = (ImageView) convertView.findViewById(R.id.iv_selected_item);
                 convertView.setTag(holder);
 
             } else {

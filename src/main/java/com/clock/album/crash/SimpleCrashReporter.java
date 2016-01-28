@@ -7,7 +7,7 @@ import com.clock.utils.crash.CrashExceptionHandler;
  * <p/>
  * Created by Clock on 2016/1/27.
  */
-public class CustomCrashReporter implements CrashExceptionHandler.CrashExceptionRemoteReport {
+public class SimpleCrashReporter implements CrashExceptionHandler.CrashExceptionRemoteReport {
 
     @Override
     public void onCrash(Throwable ex) {

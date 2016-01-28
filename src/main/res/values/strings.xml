@@ -5,4 +5,6 @@
     <string name="all_image">全部图片</string>
     <string name="selected_image">选中的图片</string>
     <string name="selected_ok">确定 (%1$s/%2$s)</string>
+    <string name="selected">选中</string>
+    <string name="image_index">%1$s/%2$s</string>
 </resources>
