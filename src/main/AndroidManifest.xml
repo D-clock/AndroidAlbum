@@ -33,7 +33,7 @@
             android:theme="@style/AlbumTheme" />
 
         <activity
-            android:name=".ui.activity.GalleryActivity"
+            android:name=".ui.activity.ImagePreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GalleryTheme" />
 

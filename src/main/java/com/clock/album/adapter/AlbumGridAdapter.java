@@ -2,6 +2,8 @@ package com.clock.album.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -13,8 +15,9 @@ import android.widget.ImageView;
 import com.clock.album.R;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderWrapper;
-import com.clock.album.ui.activity.GalleryActivity;
+import com.clock.album.ui.activity.ImagePreviewActivity;
 import com.clock.album.ui.fragment.AlbumDetailFragment;
+import com.clock.album.ui.interaction.ImagePreviewInteraction;
 import com.clock.utils.common.RuleUtils;
 
 import java.io.Serializable;
@@ -31,13 +34,16 @@ public class AlbumGridAdapter extends BaseAdapter {
     private ImageLoaderWrapper mImageLoaderWrapper;
     private View.OnClickListener mImageItemClickListener;
     private CompoundButton.OnCheckedChangeListener mImageOnSelectedListener;
+    private ImagePreviewInteraction mImagePreviewInteraction;
     private AlbumDetailFragment.OnImageSelectedInteractionListener mOnImageSelectedInteractionListener;
 
     public AlbumGridAdapter(List<ImageInfo> imageInfoList, ImageLoaderWrapper imageLoaderWrapper,
-                            AlbumDetailFragment.OnImageSelectedInteractionListener onImageSelectedInteractionListener) {
+                            AlbumDetailFragment.OnImageSelectedInteractionListener onImageSelectedInteractionListener,
+                            ImagePreviewInteraction imagePreviewInteraction) {
         this.mImageInfoList = imageInfoList;
         this.mImageLoaderWrapper = imageLoaderWrapper;
         this.mOnImageSelectedInteractionListener = onImageSelectedInteractionListener;
+        this.mImagePreviewInteraction = imagePreviewInteraction;
     }
 
     @Override
@@ -108,15 +114,13 @@ public class AlbumGridAdapter extends BaseAdapter {
         holder.imageSelectedCheckBox.setOnCheckedChangeListener(mImageOnSelectedListener);//监听图片是否被选中的状态
 
         if (mImageItemClickListener == null) {
-            final Context context = parent.getContext();
             mImageItemClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ImageInfo imageInfo = (ImageInfo) v.getTag();
-                    Intent galleryIntent = new Intent(context, GalleryActivity.class);
-                    galleryIntent.putExtra(GalleryActivity.EXTRA_IMAGE_INFO, imageInfo);
-                    galleryIntent.putExtra(GalleryActivity.EXTRA_IMAGE_INFO_LIST, (Serializable) mImageInfoList);
-                    context.startActivity(galleryIntent);
+                    if (mImagePreviewInteraction != null) {
+                        mImagePreviewInteraction.previewImage(imageInfo);
+                    }
                 }
             };
         }

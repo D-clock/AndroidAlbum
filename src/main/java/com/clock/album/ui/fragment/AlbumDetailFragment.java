@@ -1,7 +1,9 @@
 package com.clock.album.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,12 @@ import com.clock.album.adapter.AlbumGridAdapter;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
+import com.clock.album.ui.activity.ImagePreviewActivity;
 import com.clock.album.ui.fragment.base.BaseFragment;
+import com.clock.album.ui.interaction.ImagePreviewInteraction;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +29,8 @@ import java.util.ArrayList;
  * @since 2016-01-17
  */
 public class AlbumDetailFragment extends BaseFragment {
+
+    public static final int PREVIEW_REQUEST_CODE = 1000;
 
     private static final String ARG_PARAM1 = "param1";
 
@@ -70,7 +77,8 @@ public class AlbumDetailFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
         ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
-        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener);
+        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener,
+                new ImagePreviewInteractionImpl());
         mAlbumGridView.setAdapter(albumGridAdapter);
         return rootView;
     }
@@ -87,6 +95,26 @@ public class AlbumDetailFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mOnImageSelectedInteractionListener = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("Test", AlbumDetailFragment.class.getSimpleName());
+    }
+
+    /**
+     * 图片预览交互接口实现
+     */
+    private class ImagePreviewInteractionImpl implements ImagePreviewInteraction {
+
+        @Override
+        public void previewImage(ImageInfo imageInfo) {
+            Intent previewIntent = new Intent(getContext(), ImagePreviewActivity.class);
+            previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO, imageInfo);
+            previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO_LIST, (Serializable) mImageInfoList);
+            startActivityForResult(previewIntent, PREVIEW_REQUEST_CODE);
+        }
     }
 
     /**

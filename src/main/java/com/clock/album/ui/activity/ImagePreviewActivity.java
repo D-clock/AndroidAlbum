@@ -18,41 +18,41 @@ import java.util.List;
 import uk.co.senab.photoview.PhotoView;
 
 /**
- * 图片相册浏览界面
+ * 图片预览界面
  *
  * @author Clock
  * @since 2016-01-25
  */
-public class GalleryActivity extends BaseActivity implements View.OnClickListener {
+public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener {
 
     public final static String EXTRA_IMAGE_INFO_LIST = "ImageInfoList";
     public final static String EXTRA_IMAGE_INFO = "ImageInfo";
 
-    private ViewPager mGalleryViewPager;
-    private PagerAdapter mGalleryPagerAdapter;
-    private ViewPager.OnPageChangeListener mGalleryChangeListener;
+    private ViewPager mPreviewViewPager;
+    private PagerAdapter mPreviewPagerAdapter;
+    private ViewPager.OnPageChangeListener mPreviewChangeListener;
     private TextView mTitleView, mSelectedOkView;
 
     /**
      * 所有图片的列表
      */
-    private List<ImageInfo> mShowImageInfoList;
+    private List<ImageInfo> mPreviewImageInfoList;
     /**
      * 刚进入页面显示的图片
      */
-    private ImageInfo mShowImageInfo;
+    private ImageInfo mPreviewImageInfo;
 
     private ImageLoaderWrapper mImageLoaderWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_image_preview);
 
         mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
 
-        mShowImageInfo = (ImageInfo) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO);
-        mShowImageInfoList = (List<ImageInfo>) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO_LIST);
+        mPreviewImageInfo = (ImageInfo) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO);
+        mPreviewImageInfoList = (List<ImageInfo>) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO_LIST);
 
         initView();
 
@@ -60,24 +60,24 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
 
     private void initView() {
         mTitleView = (TextView) findViewById(R.id.tv_title);
-        if (mShowImageInfo != null && mShowImageInfoList != null) {
-            if (mShowImageInfoList.contains(mShowImageInfo)) {
-                setPositionToTitle(mShowImageInfoList.indexOf(mShowImageInfo));
+        if (mPreviewImageInfo != null && mPreviewImageInfoList != null) {
+            if (mPreviewImageInfoList.contains(mPreviewImageInfo)) {
+                setPositionToTitle(mPreviewImageInfoList.indexOf(mPreviewImageInfo));
             }
         }
 
         mSelectedOkView = (TextView) findViewById(R.id.tv_selected_ok);
         mSelectedOkView.setOnClickListener(this);
 
-        mGalleryViewPager = (ViewPager) findViewById(R.id.gallery_viewpager);
-        mGalleryPagerAdapter = new GalleryPagerAdapter();
-        mGalleryViewPager.setAdapter(mGalleryPagerAdapter);
-        if (mShowImageInfo != null && mShowImageInfoList != null && mShowImageInfoList.contains(mShowImageInfo)) {
-            int initShowPosition = mShowImageInfoList.indexOf(mShowImageInfo);
-            mGalleryViewPager.setCurrentItem(initShowPosition);
+        mPreviewViewPager = (ViewPager) findViewById(R.id.gallery_viewpager);
+        mPreviewPagerAdapter = new PreviewPagerAdapter();
+        mPreviewViewPager.setAdapter(mPreviewPagerAdapter);
+        if (mPreviewImageInfo != null && mPreviewImageInfoList != null && mPreviewImageInfoList.contains(mPreviewImageInfo)) {
+            int initShowPosition = mPreviewImageInfoList.indexOf(mPreviewImageInfo);
+            mPreviewViewPager.setCurrentItem(initShowPosition);
         }
-        mGalleryChangeListener = new GalleryChangeListener();
-        mGalleryViewPager.addOnPageChangeListener(mGalleryChangeListener);
+        mPreviewChangeListener = new PreviewChangeListener();
+        mPreviewViewPager.addOnPageChangeListener(mPreviewChangeListener);
 
         findViewById(R.id.iv_back).setOnClickListener(this);
     }
@@ -96,14 +96,14 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
     /**
      * 相册适配器
      */
-    private class GalleryPagerAdapter extends PagerAdapter {
+    private class PreviewPagerAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
-            if (mShowImageInfoList == null) {
+            if (mPreviewImageInfoList == null) {
                 return 0;
             }
-            return mShowImageInfoList.size();
+            return mPreviewImageInfoList.size();
         }
 
         @Override
@@ -115,9 +115,9 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View galleryItemView = View.inflate(GalleryActivity.this, R.layout.gallery_item, null);
+            View galleryItemView = View.inflate(ImagePreviewActivity.this, R.layout.preview_image_item, null);
 
-            ImageInfo imageInfo = mShowImageInfoList.get(position);
+            ImageInfo imageInfo = mPreviewImageInfoList.get(position);
             PhotoView galleryPhotoView = (PhotoView) galleryItemView.findViewById(R.id.iv_show_image);
             ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
             displayOption.loadErrorResId = R.mipmap.img_error;
@@ -138,7 +138,7 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
     /**
      * 相册详情页面滑动监听
      */
-    private class GalleryChangeListener implements ViewPager.OnPageChangeListener {
+    private class PreviewChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -162,8 +162,8 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
      * @param position
      */
     private void setPositionToTitle(int position) {
-        if (mShowImageInfoList != null) {
-            String title = String.format(getString(R.string.image_index), position + 1, mShowImageInfoList.size());
+        if (mPreviewImageInfoList != null) {
+            String title = String.format(getString(R.string.image_index), position + 1, mPreviewImageInfoList.size());
             mTitleView.setText(title);
         }
     }
