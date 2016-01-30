@@ -22,18 +22,6 @@
             android:src="@mipmap/navi_back_icon" />
 
         <TextView
-            android:id="@+id/tv_selected_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="@string/selected_ok"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:visibility="gone" />
-
-        <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +40,7 @@
 
         <CheckBox
             android:id="@+id/ckb_image_select"
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

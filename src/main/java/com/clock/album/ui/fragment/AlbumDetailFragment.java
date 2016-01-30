@@ -1,12 +1,13 @@
 package com.clock.album.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.clock.album.R;
@@ -21,6 +22,7 @@ import com.clock.album.ui.interaction.ImagePreviewInteraction;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 相册详情页面
@@ -46,6 +48,7 @@ public class AlbumDetailFragment extends BaseFragment {
      * 相册视图控件
      */
     private GridView mAlbumGridView;
+    private BaseAdapter mAlbumGridViewAdapter;
 
     /**
      * @param imageInfoList 相册列表
@@ -77,9 +80,9 @@ public class AlbumDetailFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
         ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
-        AlbumGridAdapter albumGridAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener,
+        mAlbumGridViewAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener,
                 new ImagePreviewInteractionImpl());
-        mAlbumGridView.setAdapter(albumGridAdapter);
+        mAlbumGridView.setAdapter(mAlbumGridViewAdapter);
         return rootView;
     }
 
@@ -99,8 +102,35 @@ public class AlbumDetailFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("Test", AlbumDetailFragment.class.getSimpleName());
+        if (requestCode == PREVIEW_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            List<ImageInfo> newSelectedImageList = (List<ImageInfo>) data.getSerializableExtra(ImagePreviewActivity.EXTRA_NEW_IMAGE_LIST);
+            refreshSelectedImage(newSelectedImageList);
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    /**
+     * 刷新新选中图片的数据
+     *
+     * @param newSelectedImageList
+     */
+    private void refreshSelectedImage(List<ImageInfo> newSelectedImageList) {
+        int imageSize = newSelectedImageList.size();
+        for (int imagePos = 0; imagePos < imageSize; imagePos++) {
+            ImageInfo srcImageInfo = newSelectedImageList.get(imagePos);
+            ImageInfo destImageInfo = mImageInfoList.get(imagePos);
+            destImageInfo.setIsSelected(srcImageInfo.isSelected());//遍历更新选中的状态
+            if (mOnImageSelectedInteractionListener != null) {
+                if (destImageInfo.isSelected()) {
+                    mOnImageSelectedInteractionListener.onSelected(destImageInfo.getImageFile());
+                } else {
+                    mOnImageSelectedInteractionListener.onUnSelected(destImageInfo.getImageFile());
+                }
+            }
+        }
+        mAlbumGridViewAdapter.notifyDataSetChanged();
     }
 
     /**

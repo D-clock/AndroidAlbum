@@ -1,10 +1,15 @@
 package com.clock.album.ui.activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.clock.album.R;
@@ -13,6 +18,8 @@ import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.activity.base.BaseActivity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
@@ -23,15 +30,18 @@ import uk.co.senab.photoview.PhotoView;
  * @author Clock
  * @since 2016-01-25
  */
-public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener {
+public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public final static String EXTRA_IMAGE_INFO_LIST = "ImageInfoList";
     public final static String EXTRA_IMAGE_INFO = "ImageInfo";
 
+    public final static String EXTRA_NEW_IMAGE_LIST = "NewImageList";
+
     private ViewPager mPreviewViewPager;
     private PagerAdapter mPreviewPagerAdapter;
     private ViewPager.OnPageChangeListener mPreviewChangeListener;
-    private TextView mTitleView, mSelectedOkView;
+    private TextView mTitleView;
+    private CheckBox mImageSelectedBox;
 
     /**
      * 所有图片的列表
@@ -59,15 +69,21 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initView() {
+
         mTitleView = (TextView) findViewById(R.id.tv_title);
         if (mPreviewImageInfo != null && mPreviewImageInfoList != null) {
             if (mPreviewImageInfoList.contains(mPreviewImageInfo)) {
-                setPositionToTitle(mPreviewImageInfoList.indexOf(mPreviewImageInfo));
+                int imageIndex = mPreviewImageInfoList.indexOf(mPreviewImageInfo);
+                setPositionToTitle(imageIndex);
+
             }
         }
 
-        mSelectedOkView = (TextView) findViewById(R.id.tv_selected_ok);
-        mSelectedOkView.setOnClickListener(this);
+        mImageSelectedBox = (CheckBox) findViewById(R.id.ckb_image_select);
+        if (mPreviewImageInfo != null) {
+            mImageSelectedBox.setChecked(mPreviewImageInfo.isSelected());
+        }
+        mImageSelectedBox.setOnCheckedChangeListener(this);
 
         mPreviewViewPager = (ViewPager) findViewById(R.id.gallery_viewpager);
         mPreviewPagerAdapter = new PreviewPagerAdapter();
@@ -88,8 +104,23 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         if (viewId == R.id.iv_back) {
             onBackPressed();
 
-        } else if (viewId == R.id.tv_selected_ok) {
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_NEW_IMAGE_LIST, (Serializable) mPreviewImageInfoList);
+        setResult(Activity.RESULT_OK, data);
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView == mImageSelectedBox) {
+            int currentPosition = mPreviewViewPager.getCurrentItem();
+            ImageInfo imageInfo = mPreviewImageInfoList.get(currentPosition);
+            imageInfo.setIsSelected(isChecked);
         }
     }
 
@@ -147,7 +178,13 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onPageSelected(int position) {
+            mImageSelectedBox.setOnCheckedChangeListener(null);//先反注册监听，避免重复更新选中的状态
+
             setPositionToTitle(position);
+            ImageInfo imageInfo = mPreviewImageInfoList.get(position);
+            mImageSelectedBox.setChecked(imageInfo.isSelected());
+
+            mImageSelectedBox.setOnCheckedChangeListener(ImagePreviewActivity.this);
         }
 
         @Override
@@ -167,4 +204,5 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
             mTitleView.setText(title);
         }
     }
+
 }
