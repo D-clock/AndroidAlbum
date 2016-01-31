@@ -62,6 +62,19 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
+        if (Build.VERSION.SDK_INT >= 11) {
+            getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if (View.SYSTEM_UI_FLAG_VISIBLE == visibility) {//此处需要添加顶部和底部消失和出现的动画效果
+                        Log.i("Test", "SYSTEM_UI_FLAG_VISIBLE");
+                    } else {
+                        Log.i("Test", "SYSTEM_UI_FLAG_INVISIBLE");
+                    }
+                }
+            });
+        }
+
         mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
 
         mPreviewImageInfo = (ImageInfo) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO);
