@@ -9,6 +9,7 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
+        android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#b4028ce5">
@@ -33,6 +34,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/footer_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

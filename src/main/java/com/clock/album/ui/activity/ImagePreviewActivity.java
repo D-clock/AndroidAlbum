@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -35,6 +36,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    private final static String TAG = ImagePreviewActivity.class.getSimpleName();
+
     public final static String EXTRA_IMAGE_INFO_LIST = "ImageInfoList";
     public final static String EXTRA_IMAGE_INFO = "ImageInfo";
 
@@ -45,6 +48,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     private ViewPager.OnPageChangeListener mPreviewChangeListener;
     private TextView mTitleView;
     private CheckBox mImageSelectedBox;
+    private View mHeaderView, mFooterView;
 
     /**
      * 所有图片的列表
@@ -67,9 +71,15 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
                 @Override
                 public void onSystemUiVisibilityChange(int visibility) {
                     if (View.SYSTEM_UI_FLAG_VISIBLE == visibility) {//此处需要添加顶部和底部消失和出现的动画效果
-                        Log.i("Test", "SYSTEM_UI_FLAG_VISIBLE");
+                        Log.i(TAG, "SYSTEM_UI_FLAG_VISIBLE");
+                        mHeaderView.startAnimation(AnimationUtils.loadAnimation(ImagePreviewActivity.this, R.anim.top_enter_anim));
+                        mFooterView.startAnimation(AnimationUtils.loadAnimation(ImagePreviewActivity.this, R.anim.bottom_enter_anim));
+
                     } else {
-                        Log.i("Test", "SYSTEM_UI_FLAG_INVISIBLE");
+                        Log.i(TAG, "SYSTEM_UI_FLAG_INVISIBLE");
+                        mHeaderView.startAnimation(AnimationUtils.loadAnimation(ImagePreviewActivity.this, R.anim.top_exit_anim));
+                        mFooterView.startAnimation(AnimationUtils.loadAnimation(ImagePreviewActivity.this, R.anim.bottom_exit_anim));
+
                     }
                 }
             });
@@ -112,6 +122,9 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         mPreviewViewPager.addOnPageChangeListener(mPreviewChangeListener);
 
         findViewById(R.id.iv_back).setOnClickListener(this);
+
+        mHeaderView = findViewById(R.id.header_view);
+        mFooterView = findViewById(R.id.footer_view);
     }
 
     @Override
