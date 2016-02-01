@@ -22,7 +22,7 @@
 
 - 图片详情预览页面，添加选图功能和沉浸模式（Immersive-Mode）效果
 
-![选图功能和沉浸模式（Immersive-Mode）效果](http://b.hiphotos.baidu.com/image/pic/item/838ba61ea8d3fd1f3071ac4c374e251f95ca5f4f.jpg)
+![选图功能和沉浸模式效果](http://b.hiphotos.baidu.com/image/pic/item/838ba61ea8d3fd1f3071ac4c374e251f95ca5f4f.jpg)
 
 
 ## 接下来想做的
