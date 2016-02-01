@@ -3,9 +3,11 @@ package com.clock.album.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * 图片预览界面
@@ -58,6 +61,19 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
+
+        if (Build.VERSION.SDK_INT >= 11) {
+            getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if (View.SYSTEM_UI_FLAG_VISIBLE == visibility) {//此处需要添加顶部和底部消失和出现的动画效果
+                        Log.i("Test", "SYSTEM_UI_FLAG_VISIBLE");
+                    } else {
+                        Log.i("Test", "SYSTEM_UI_FLAG_INVISIBLE");
+                    }
+                }
+            });
+        }
 
         mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
 
@@ -125,6 +141,16 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     }
 
     /**
+     * 监听PhotoView的点击事件
+     */
+    private PhotoViewAttacher.OnViewTapListener mOnPreviewTapListener = new PhotoViewAttacher.OnViewTapListener() {
+        @Override
+        public void onViewTap(View view, float v, float v1) {
+            toggleImmersiveMode();
+        }
+    };
+
+    /**
      * 相册适配器
      */
     private class PreviewPagerAdapter extends PagerAdapter {
@@ -150,6 +176,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
 
             ImageInfo imageInfo = mPreviewImageInfoList.get(position);
             PhotoView galleryPhotoView = (PhotoView) galleryItemView.findViewById(R.id.iv_show_image);
+            galleryPhotoView.setOnViewTapListener(mOnPreviewTapListener);
             ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
             displayOption.loadErrorResId = R.mipmap.img_error;
             displayOption.loadingResId = R.mipmap.img_default;
@@ -205,4 +232,25 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * 切换沉浸栏模式（Immersive - Mode）
+     */
+    private void toggleImmersiveMode() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+            // Navigation bar hiding:  Backwards compatible to ICS.
+            if (Build.VERSION.SDK_INT >= 14) {
+                uiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
+            // Status bar hiding: Backwards compatible to Jellybean
+            if (Build.VERSION.SDK_INT >= 16) {
+                uiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            }
+            // Immersive mode: Backward compatible to KitKat.
+            if (Build.VERSION.SDK_INT >= 18) {
+                uiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+        }
+    }
 }
