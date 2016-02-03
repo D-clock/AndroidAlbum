@@ -2,7 +2,6 @@ package com.clock.album.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -22,7 +21,6 @@ import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.activity.base.BaseActivity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
