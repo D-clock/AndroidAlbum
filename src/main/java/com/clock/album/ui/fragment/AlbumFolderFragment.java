@@ -66,7 +66,7 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_album_directory, container, false);
         mFolderListView = (ListView) rootView.findViewById(R.id.list_album);
-        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader();
         AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, loaderWrapper);
         mFolderListView.setAdapter(albumFolderAdapter);
         mFolderListView.setOnItemClickListener(this);

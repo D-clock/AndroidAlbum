@@ -38,7 +38,7 @@ public class ImageSelectActivity extends BaseActivity implements View.OnClickLis
 
         findViewById(R.id.iv_back).setOnClickListener(this);
 
-        mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        mImageLoaderWrapper = ImageLoaderFactory.getLoader();
         mSelectedImageList = (List<File>) getIntent().getSerializableExtra(EXTRA_SELECTED_IMAGE_LIST);
 
         mSelectedImageGridView = (GridView) findViewById(R.id.gv_image_selected);

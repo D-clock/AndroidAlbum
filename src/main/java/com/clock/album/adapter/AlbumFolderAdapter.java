@@ -63,15 +63,17 @@ public class AlbumFolderAdapter extends BaseAdapter {
         }
 
         AlbumInfo albumInfo = mAlbumInfoList.get(position);
-        File folder = albumInfo.getFolder();
-        String key = folder.getAbsolutePath();
-        ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
-        displayOption.loadingResId = R.mipmap.img_default;
-        displayOption.loadErrorResId = R.mipmap.img_error;
-        mImageLoaderWrapper.displayImage(holder.ivAlbumCover, albumInfo.getFrontCover(), displayOption);
+        if (albumInfo != null){
+            File folder = albumInfo.getFolder();
+            String key = folder.getAbsolutePath();
+            ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
+            displayOption.loadingResId = R.mipmap.img_default;
+            displayOption.loadErrorResId = R.mipmap.img_error;
+            mImageLoaderWrapper.displayImage(holder.ivAlbumCover, albumInfo.getFrontCover(), displayOption);
 
-        holder.tvDirectoryName.setText(folder.getName());
-        holder.tvChildCount.setText(albumInfo.getFileCount() + "");
+            holder.tvDirectoryName.setText(folder.getName());
+            holder.tvChildCount.setText(albumInfo.getFileCount() + "");
+        }
 
         return convertView;
     }

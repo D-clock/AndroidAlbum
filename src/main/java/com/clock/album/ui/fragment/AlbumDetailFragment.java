@@ -79,7 +79,7 @@ public class AlbumDetailFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
-        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader();
         mAlbumGridViewAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener,
                 new ImagePreviewInteractionImpl());
         mAlbumGridView.setAdapter(mAlbumGridViewAdapter);

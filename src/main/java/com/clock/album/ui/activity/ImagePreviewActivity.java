@@ -83,7 +83,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
             });
         }
 
-        mImageLoaderWrapper = ImageLoaderFactory.getLoader(ImageLoaderFactory.UNIVERSAL_ANDROID_IMAGE_LOADER);
+        mImageLoaderWrapper = ImageLoaderFactory.getLoader();
 
         mPreviewImageInfo = (ImageInfo) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO);
         mPreviewImageInfoList = (List<ImageInfo>) getIntent().getSerializableExtra(EXTRA_IMAGE_INFO_LIST);
