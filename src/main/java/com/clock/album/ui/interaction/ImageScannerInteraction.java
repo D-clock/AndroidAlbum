@@ -10,6 +10,7 @@ import java.util.Map;
  * <p/>
  * Created by Clock on 2016/1/20.
  */
+@Deprecated
 public interface ImageScannerInteraction {
 
     /**
@@ -18,5 +19,6 @@ public interface ImageScannerInteraction {
      * @param albumFolderList   所有包含图片的目录
      * @param albumImageListMap 相册图片列表信息，key是图片目录的绝对路径，value是目录下所有图片的路径
      */
+    @Deprecated
     public void refreshImageInfo(List<File> albumFolderList, Map<String, ArrayList<File>> albumImageListMap);
 }

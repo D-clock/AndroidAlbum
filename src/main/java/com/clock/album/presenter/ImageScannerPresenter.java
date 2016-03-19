@@ -2,20 +2,20 @@ package com.clock.album.presenter;
 
 import android.support.v4.app.LoaderManager;
 
-import com.clock.album.ui.interaction.ImageScannerInteraction;
+import com.clock.album.view.AlbumFolderView;
 
 /**
- * 图片扫描业务接口
+ * 图片扫描Presenter层
  * <p/>
- * Created by Clock on 2016/1/20.
+ * Created by Clock on 2016/3/19.
  */
 public interface ImageScannerPresenter {
 
     /**
-     * 扫描SD卡上的图片
+     * 扫描获取
      *
-     * @param loaderManager 数据加载器
-     * @param interaction   扫描界面交互接口
+     * @param albumFolderView
+     * @param loaderManager
      */
-    public void scanExternalStorage(LoaderManager loaderManager, ImageScannerInteraction interaction);
+    public void scanImageFolder(AlbumFolderView albumFolderView, LoaderManager loaderManager);
 }

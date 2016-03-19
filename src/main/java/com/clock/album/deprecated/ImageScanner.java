@@ -1,4 +1,4 @@
-package com.clock.album.presenter;
+package com.clock.album.deprecated;
 
 import android.content.Context;
 import android.database.Cursor;
