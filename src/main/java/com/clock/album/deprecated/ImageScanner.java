@@ -117,6 +117,9 @@ public class ImageScanner implements ImageScannerPresenter {
                 imageMessage.interaction = interaction;
                 message.obj = imageMessage;
                 mRefreshHandler.sendMessage(message);
+
+                //http://stackoverflow.com/questions/7746140/android-problems-using-fragmentactivity-loader-to-update-fragmentstatepagera
+                //interaction.refreshImageInfo(albumFolderList , albumImageListMap);
             }
 
             @Override

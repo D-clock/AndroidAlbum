@@ -12,10 +12,10 @@ import com.clock.album.view.AlbumFolderView;
 public interface ImageScannerPresenter {
 
     /**
-     * 扫描获取
+     * 扫描获取图片文件夹列表
      *
-     * @param albumFolderView
-     * @param loaderManager
+     * @param albumFolderView 显示图片文件夹列表的View层接口
+     * @param loaderManager   获取系统图片的LoaderManager
      */
     public void scanImageFolder(AlbumFolderView albumFolderView, LoaderManager loaderManager);
 }

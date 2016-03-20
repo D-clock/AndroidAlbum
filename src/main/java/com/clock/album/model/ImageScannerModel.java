@@ -22,5 +22,4 @@ public interface ImageScannerModel {
      */
     public Map<String, ArrayList<AlbumInfo>> getAlbumImageInfo(LoaderManager loaderManager);
 
-
 }
