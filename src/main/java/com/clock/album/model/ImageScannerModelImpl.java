@@ -12,7 +12,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.clock.album.R;
-import com.clock.album.entity.AlbumInfo;
+import com.clock.album.entity.AlbumFolderInfo;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.presenter.entity.ImageScanResult;
 import com.clock.album.view.entity.AlbumViewData;
@@ -131,50 +131,42 @@ public class ImageScannerModelImpl implements ImageScannerModel {
     @Override
     public AlbumViewData archiveAlbumInfo(Context context, ImageScanResult imageScanResult) {
         if (imageScanResult != null) {
+
             List<File> albumFolderList = imageScanResult.getAlbumFolderList();
             Map<String, ArrayList<File>> albumImageListMap = imageScanResult.getAlbumImageListMap();
 
             if (albumFolderList != null && albumFolderList.size() > 0 && albumImageListMap != null) {
 
-                ArrayList<AlbumInfo> albumInfoArrayList = new ArrayList<>();
-                AlbumInfo totalImageAlbumInfo = new AlbumInfo();//放全部图片文件目录的信息
-                File totalImageAlbumFolder = new File("/" + context.getString(R.string.all_image));//用来存放所有图片的虚拟文件夹，实际在SD卡上是不存在的
-                totalImageAlbumInfo.setFolder(totalImageAlbumFolder);
-                albumInfoArrayList.add(totalImageAlbumInfo);
-                int totalImage = 0;
+                List<AlbumFolderInfo> albumFolderInfoList = new ArrayList<>();
 
-                ArrayList<ImageInfo> totalImageInfoList = new ArrayList<>();
-                Map<String, ArrayList<ImageInfo>> albumImageInfoListMap = new HashMap<>();
-                albumImageInfoListMap.put(totalImageAlbumFolder.getAbsolutePath(), totalImageInfoList);//全部图片
-
-                Set<String> albumKeySet = albumImageListMap.keySet();
-                for (String albumKey : albumKeySet) {//每个目录的图片
-                    ArrayList<ImageInfo> imageInfoArrayList = ImageInfo.buildFromFileList(albumImageListMap.get(albumKey));
-                    albumImageInfoListMap.put(albumKey, imageInfoArrayList);
+                AlbumFolderInfo allImageFolder = createAllImageAlbum(context, albumImageListMap);
+                if (allImageFolder != null) {
+                    albumFolderInfoList.add(allImageFolder);
                 }
 
                 int albumFolderSize = albumFolderList.size();
                 for (int albumFolderPos = 0; albumFolderPos < albumFolderSize; albumFolderPos++) {
+
                     File albumFolder = albumFolderList.get(albumFolderPos);
-                    AlbumInfo albumInfo = new AlbumInfo();
-                    albumInfo.setFolder(albumFolder);
+                    AlbumFolderInfo albumFolderInfo = new AlbumFolderInfo();
+
+                    String folderName = albumFolder.getName();
+                    albumFolderInfo.setFolderName(folderName);
+
                     String albumPath = albumFolder.getAbsolutePath();
-                    ArrayList<ImageInfo> imageInfoList = albumImageInfoListMap.get(albumPath);
-                    albumInfo.setFrontCover(imageInfoList.get(0).getImageFile());//设置相册的封面
-                    albumInfo.setFileCount(imageInfoList.size());
-                    albumInfoArrayList.add(albumInfo);
-                    if (albumFolderPos == 0) {//设置"全部图片目录"的封面
-                        totalImageAlbumInfo.setFrontCover(imageInfoList.get(0).getImageFile());
-                    }
-                    totalImage = totalImage + imageInfoList.size();//计算所有图片的总数
-                    totalImageInfoList.addAll(imageInfoList);//添加所有图片汇总
+                    List<File> albumImageList = albumImageListMap.get(albumPath);
+                    File frontCover = albumImageList.get(0);
+                    albumFolderInfo.setFrontCover(frontCover);//设置首张图片
+
+                    List<ImageInfo> imageInfoList = ImageInfo.buildFromFileList(albumImageList);
+                    albumFolderInfo.setImageInfoList(imageInfoList);
+                    allImageFolder.getImageInfoList().addAll(imageInfoList);//保存到 "全部图片" 目录下
+
+                    albumFolderInfoList.add(albumFolderInfo);
                 }
-                totalImageAlbumInfo.setFileCount(totalImage);
 
                 AlbumViewData albumViewData = new AlbumViewData();
-                albumViewData.setImageTotal(totalImage);
-                albumViewData.setAlbumInfoList(albumInfoArrayList);
-                albumViewData.setAlbumImageInfoListMap(albumImageInfoListMap);
+                albumViewData.setAlbumFolderInfoList(albumFolderInfoList);
 
                 return albumViewData;
             }
@@ -184,6 +176,41 @@ public class ImageScannerModelImpl implements ImageScannerModel {
             return null;
         }
     }
+
+    /**
+     * 创建一个"全部图片"目录
+     *
+     * @param albumImageListMap
+     * @return
+     */
+    private AlbumFolderInfo createAllImageAlbum(Context context, Map<String, ArrayList<File>> albumImageListMap) {
+        if (albumImageListMap != null) {
+            AlbumFolderInfo albumFolderInfo = new AlbumFolderInfo();
+            albumFolderInfo.setFolderName(context.getString(R.string.all_image));//设置目录名
+
+            List<ImageInfo> totalImageInfoList = new ArrayList<>();
+            albumFolderInfo.setImageInfoList(totalImageInfoList);//设置所有的图片文件
+
+            boolean isFirstAlbum = true; //是否是第一个目录
+
+            Set<String> albumKeySet = albumImageListMap.keySet();
+            for (String albumKey : albumKeySet) {//每个目录的图片
+                List<File> albumImageList = albumImageListMap.get(albumKey);
+
+                if (isFirstAlbum == true) {
+                    File frontCover = albumImageList.get(0);
+                    albumFolderInfo.setFrontCover(frontCover);//设置第一张图片
+
+                    isFirstAlbum = false;
+                }
+            }
+
+            return albumFolderInfo;
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * 按照文件的修改时间进行排序，越最近修改的，排得越前

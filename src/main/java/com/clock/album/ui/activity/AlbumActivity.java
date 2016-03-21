@@ -9,23 +9,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.clock.album.R;
-import com.clock.album.entity.AlbumInfo;
+import com.clock.album.entity.AlbumFolderInfo;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.presenter.ImageScannerPresenter;
 import com.clock.album.presenter.ImageScannerPresenterImpl;
 import com.clock.album.ui.activity.base.BaseActivity;
 import com.clock.album.ui.fragment.AlbumDetailFragment;
 import com.clock.album.ui.fragment.AlbumFolderFragment;
-import com.clock.album.ui.interaction.ImageScannerInteraction;
 import com.clock.album.view.AlbumView;
+import com.clock.album.view.ImageChooseView;
 import com.clock.album.view.entity.AlbumViewData;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 系统相册页面
@@ -33,10 +31,10 @@ import java.util.Set;
  * @author Clock
  * @since 2016-01-06
  */
-public class AlbumActivity extends BaseActivity implements View.OnClickListener, AlbumFolderFragment.OnAlbumDetailInteractionListener,
-        AlbumDetailFragment.OnImageSelectedInteractionListener, AlbumView {
+public class AlbumActivity extends BaseActivity implements View.OnClickListener, ImageChooseView, AlbumView {
 
     private final static String TAG = AlbumActivity.class.getSimpleName();
+    private final static String FRAGMENT_BACK_STACK = "FragmentBackStack";
 
     /**
      * 相册列表页面
@@ -45,22 +43,17 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 相册详情页面
      */
-    private HashMap<String, AlbumDetailFragment> mAlbumDetailFragmentMap = new HashMap<>();
-    /**
-     * 所有图片的信息列表（图片目录的绝对路径作为map的key，value是该图片目录下的所有图片文件信息）
-     */
-    private Map<String, ArrayList<ImageInfo>> mAlbumImageInfoListMap;
+    private HashMap<AlbumFolderInfo, AlbumDetailFragment> mAlbumDetailFragmentMap = new HashMap<>();
     /**
      * 被选中的图片文件列表
      */
     private ArrayList<File> mSelectedImageFileList = new ArrayList<>();
-    /**
-     * 图片的总数
-     */
-    private int mImageTotal = 0;
 
     private ImageScannerPresenter mImageScannerPresenter;
-
+    /**
+     * 相册目录信息列表
+     */
+    private List<AlbumFolderInfo> mAlbumFolderInfoList;
     /**
      * 显示图片目录的名称，选中图片的按钮
      */
@@ -98,23 +91,30 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void switchAlbumFolder(File albumFolder) {
-        String key = albumFolder.getAbsolutePath();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        AlbumDetailFragment albumDetailFragment = mAlbumDetailFragmentMap.get(key);
-        if (albumDetailFragment == null) {
-            ArrayList<ImageInfo> imageInfoList = mAlbumImageInfoListMap.get(key);
-            albumDetailFragment = AlbumDetailFragment.newInstance(imageInfoList);
-            mAlbumDetailFragmentMap.put(key, albumDetailFragment);
+    public void switchAlbumFolder(AlbumFolderInfo albumFolderInfo) {
+        if (albumFolderInfo != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            AlbumDetailFragment albumDetailFragment = mAlbumDetailFragmentMap.get(albumFolderInfo);
+            if (albumDetailFragment == null) {
+                List<ImageInfo> imageInfoList = albumFolderInfo.getImageInfoList();
+                albumDetailFragment = AlbumDetailFragment.newInstance(imageInfoList);
+                mAlbumDetailFragmentMap.put(albumFolderInfo, albumDetailFragment);
+            }
+            fragmentTransaction.replace(R.id.fragment_container, albumDetailFragment);
+            fragmentTransaction.addToBackStack(FRAGMENT_BACK_STACK);
+            fragmentTransaction.commit();
+
+            refreshFolderName(albumFolderInfo.getFolderName());
         }
-        fragmentTransaction.replace(R.id.fragment_container, albumDetailFragment);
-        fragmentTransaction.addToBackStack(key);
-        fragmentTransaction.commit();
     }
 
-    @Override
-    public void refreshFolderName(String albumFolderName) {
+    /**
+     * 刷新目录名称
+     *
+     * @param albumFolderName
+     */
+    private void refreshFolderName(String albumFolderName) {
         if (!TextUtils.isEmpty(albumFolderName)) {
             mTitleView.setText(albumFolderName);
         }
@@ -132,28 +132,15 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
             public void onBackStackChanged() {
                 int backStackCount = fragmentManager.getBackStackEntryCount();
                 if (backStackCount == 0) {
-                    refreshFolderName(getString(R.string.all_image));
+                    AlbumFolderInfo albumFolderInfo = mAlbumFolderInfoList.get(0);
+                    String folderName = albumFolderInfo.getFolderName();
+                    refreshFolderName(folderName);
                 }
             }
         });
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void onSelected(File imageFile) {
-        if (!mSelectedImageFileList.contains(imageFile)) {
-            mSelectedImageFileList.add(imageFile);
-            refreshSelectedViewState();
-        }
-    }
-
-    @Override
-    public void onUnSelected(File imageFile) {
-        if (mSelectedImageFileList.contains(imageFile)) {
-            mSelectedImageFileList.remove(imageFile);
-            refreshSelectedViewState();
-        }
-    }
 
     /**
      * 刷新选中按钮的状态
@@ -164,7 +151,10 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
 
         } else {
             String selectedStringFormat = getString(R.string.selected_ok);
-            String selectedString = String.format(selectedStringFormat, mSelectedImageFileList.size(), mImageTotal);
+            int selectedSize = mSelectedImageFileList.size();
+            AlbumFolderInfo albumFolderInfo = mAlbumFolderInfoList.get(0);
+            int totalSize = albumFolderInfo.getImageInfoList().size();
+            String selectedString = String.format(selectedStringFormat, selectedSize, totalSize);
             mSelectedView.setText(selectedString);
             mSelectedView.setVisibility(View.VISIBLE);
 
@@ -172,14 +162,30 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void setAlbumData(AlbumViewData albumData) {
+    public void refreshAlbumData(AlbumViewData albumData) {
         if (albumData != null) {
-            mAlbumImageInfoListMap = albumData.getAlbumImageInfoListMap();
-            mImageTotal = albumData.getImageTotal();
-
-            List<AlbumInfo> albumInfoList = albumData.getAlbumInfoList();
-            mAlbumFolderFragment = AlbumFolderFragment.newInstance(albumInfoList);
+            mAlbumFolderInfoList = albumData.getAlbumFolderInfoList();
+            mAlbumFolderFragment = AlbumFolderFragment.newInstance(mAlbumFolderInfoList);
             switchAlbumFolderList();
         }
     }
+
+    @Override
+    public void refreshSelectedCounter(ImageInfo imageInfo) {
+        if (imageInfo != null) {
+            boolean isSelected = imageInfo.isSelected();
+            File imageFile = imageInfo.getImageFile();
+            if (isSelected) {//选中
+                if (!mSelectedImageFileList.contains(imageFile)) {
+                    mSelectedImageFileList.add(imageFile);
+                }
+            } else {//取消选中
+                if (mSelectedImageFileList.contains(imageFile)) {
+                    mSelectedImageFileList.remove(imageFile);
+                }
+            }
+            refreshSelectedViewState();
+        }
+    }
+
 }

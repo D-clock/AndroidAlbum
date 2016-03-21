@@ -7,38 +7,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.clock.album.R;
-import com.clock.album.entity.AlbumInfo;
+import com.clock.album.entity.AlbumFolderInfo;
+import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 相册目录适配器
+ * <p/>
  * Created by Clock on 2016/1/17.
  */
 public class AlbumFolderAdapter extends BaseAdapter {
 
-    private List<AlbumInfo> mAlbumInfoList;
+    private List<AlbumFolderInfo> mAlbumFolderInfoList;
     private ImageLoaderWrapper mImageLoaderWrapper;
 
-    public AlbumFolderAdapter(List<AlbumInfo> folderList, ImageLoaderWrapper imageLoaderWrapper) {
-        this.mAlbumInfoList = folderList;
+    public AlbumFolderAdapter(List<AlbumFolderInfo> albumFolderInfoList, ImageLoaderWrapper imageLoaderWrapper) {
+        this.mAlbumFolderInfoList = albumFolderInfoList;
         this.mImageLoaderWrapper = imageLoaderWrapper;
     }
 
     @Override
     public int getCount() {
-        if (mAlbumInfoList == null) {
+        if (mAlbumFolderInfoList == null) {
             return 0;
         }
-        return mAlbumInfoList.size();
+        return mAlbumFolderInfoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mAlbumInfoList.get(position);
+        return mAlbumFolderInfoList.get(position);
     }
 
     @Override
@@ -62,18 +63,20 @@ public class AlbumFolderAdapter extends BaseAdapter {
 
         }
 
-        AlbumInfo albumInfo = mAlbumInfoList.get(position);
-        if (albumInfo != null){
-            File folder = albumInfo.getFolder();
-            String key = folder.getAbsolutePath();
-            ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
-            displayOption.loadingResId = R.mipmap.img_default;
-            displayOption.loadErrorResId = R.mipmap.img_error;
-            mImageLoaderWrapper.displayImage(holder.ivAlbumCover, albumInfo.getFrontCover(), displayOption);
+        AlbumFolderInfo albumFolderInfo = mAlbumFolderInfoList.get(position);
 
-            holder.tvDirectoryName.setText(folder.getName());
-            holder.tvChildCount.setText(albumInfo.getFileCount() + "");
-        }
+
+        File frontCover = albumFolderInfo.getFrontCover();
+        ImageLoaderWrapper.DisplayOption displayOption = new ImageLoaderWrapper.DisplayOption();
+        displayOption.loadingResId = R.mipmap.img_default;
+        displayOption.loadErrorResId = R.mipmap.img_error;
+        mImageLoaderWrapper.displayImage(holder.ivAlbumCover, frontCover, displayOption);
+
+        String folderName = albumFolderInfo.getFolderName();
+        holder.tvDirectoryName.setText(folderName);
+
+        List<ImageInfo> imageInfoList = albumFolderInfo.getImageInfoList();
+        holder.tvChildCount.setText(imageInfoList.size() + "");
 
         return convertView;
     }

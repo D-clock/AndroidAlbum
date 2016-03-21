@@ -1,11 +1,8 @@
 package com.clock.album.view.entity;
 
-import com.clock.album.entity.AlbumInfo;
-import com.clock.album.entity.ImageInfo;
+import com.clock.album.entity.AlbumFolderInfo;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 相册界面需要的数据
@@ -17,17 +14,21 @@ public class AlbumViewData {
     /**
      * 图片总数
      */
-    private int imageTotal;
+    //private int imageTotal;
     /**
      * 所有图片的信息列表（图片目录的绝对路径作为map的key，value是该图片目录下的所有图片文件信息）
      */
-    private Map<String, ArrayList<ImageInfo>> albumImageInfoListMap;
+    //private Map<String, ArrayList<ImageInfo>> albumImageInfoListMap;
     /**
      * 所有有图片的目录信息
      */
-    private List<AlbumInfo> albumInfoList;
+    //private List<AlbumInfo> albumInfoList;
+    /**
+     * 相册目录列表
+     */
+    private List<AlbumFolderInfo> albumFolderInfoList;
 
-    public Map<String, ArrayList<ImageInfo>> getAlbumImageInfoListMap() {
+    /*public Map<String, ArrayList<ImageInfo>> getAlbumImageInfoListMap() {
         return albumImageInfoListMap;
     }
 
@@ -49,5 +50,13 @@ public class AlbumViewData {
 
     public void setImageTotal(int imageTotal) {
         this.imageTotal = imageTotal;
+    }*/
+
+    public List<AlbumFolderInfo> getAlbumFolderInfoList() {
+        return albumFolderInfoList;
+    }
+
+    public void setAlbumFolderInfoList(List<AlbumFolderInfo> albumFolderInfoList) {
+        this.albumFolderInfoList = albumFolderInfoList;
     }
 }

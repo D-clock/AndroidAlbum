@@ -1,9 +1,5 @@
 package com.clock.album.adapter;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -15,12 +11,9 @@ import android.widget.ImageView;
 import com.clock.album.R;
 import com.clock.album.entity.ImageInfo;
 import com.clock.album.imageloader.ImageLoaderWrapper;
-import com.clock.album.ui.activity.ImagePreviewActivity;
-import com.clock.album.ui.fragment.AlbumDetailFragment;
-import com.clock.album.ui.interaction.ImagePreviewInteraction;
+import com.clock.album.view.ImageChooseView;
 import com.clock.utils.common.RuleUtils;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -34,16 +27,16 @@ public class AlbumGridAdapter extends BaseAdapter {
     private ImageLoaderWrapper mImageLoaderWrapper;
     private View.OnClickListener mImageItemClickListener;
     private CompoundButton.OnCheckedChangeListener mImageOnSelectedListener;
-    private ImagePreviewInteraction mImagePreviewInteraction;
-    private AlbumDetailFragment.OnImageSelectedInteractionListener mOnImageSelectedInteractionListener;
+    private OnClickPreviewImageListener mOnClickPreviewImageListener;
+    private ImageChooseView mImageChooseView;
 
     public AlbumGridAdapter(List<ImageInfo> imageInfoList, ImageLoaderWrapper imageLoaderWrapper,
-                            AlbumDetailFragment.OnImageSelectedInteractionListener onImageSelectedInteractionListener,
-                            ImagePreviewInteraction imagePreviewInteraction) {
+                            ImageChooseView imageChooseView,
+                            OnClickPreviewImageListener onClickPreviewImageListener) {
         this.mImageInfoList = imageInfoList;
         this.mImageLoaderWrapper = imageLoaderWrapper;
-        this.mOnImageSelectedInteractionListener = onImageSelectedInteractionListener;
-        this.mImagePreviewInteraction = imagePreviewInteraction;
+        this.mImageChooseView = imageChooseView;
+        this.mOnClickPreviewImageListener = onClickPreviewImageListener;
     }
 
     @Override
@@ -100,12 +93,8 @@ public class AlbumGridAdapter extends BaseAdapter {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     ImageInfo imageInfo = (ImageInfo) buttonView.getTag();
                     imageInfo.setIsSelected(isChecked);
-                    if (mOnImageSelectedInteractionListener != null) {
-                        if (isChecked) {
-                            mOnImageSelectedInteractionListener.onSelected(imageInfo.getImageFile());
-                        } else {
-                            mOnImageSelectedInteractionListener.onUnSelected(imageInfo.getImageFile());
-                        }
+                    if (mImageChooseView != null) {
+                        mImageChooseView.refreshSelectedCounter(imageInfo);
                     }
                 }
             };
@@ -118,8 +107,8 @@ public class AlbumGridAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     ImageInfo imageInfo = (ImageInfo) v.getTag();
-                    if (mImagePreviewInteraction != null) {
-                        mImagePreviewInteraction.previewImage(imageInfo);
+                    if (mOnClickPreviewImageListener != null) {
+                        mOnClickPreviewImageListener.onClickPreview(imageInfo);
                     }
                 }
             };
@@ -150,5 +139,18 @@ public class AlbumGridAdapter extends BaseAdapter {
          * 图片选择按钮
          */
         CheckBox imageSelectedCheckBox;
+    }
+
+
+    /**
+     * 点击预览图片操作监听借口
+     */
+    public static interface OnClickPreviewImageListener {
+        /**
+         * 当想点击某张图片进行预览的时候触发此函数
+         *
+         * @param imageInfo
+         */
+        public void onClickPreview(ImageInfo imageInfo);
     }
 }

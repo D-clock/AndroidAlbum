@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 图片信息
+ * <p/>
  * Created by Clock on 2016/1/26.
  */
 public class ImageInfo implements Serializable {
@@ -60,9 +61,9 @@ public class ImageInfo implements Serializable {
      * @param imageFileList
      * @return
      */
-    public static ArrayList<ImageInfo> buildFromFileList(List<File> imageFileList) {
+    public static List<ImageInfo> buildFromFileList(List<File> imageFileList) {
         if (imageFileList != null) {
-            ArrayList<ImageInfo> imageInfoArrayList = new ArrayList<>();
+            List<ImageInfo> imageInfoArrayList = new ArrayList<>();
             for (File imageFile : imageFileList) {
                 ImageInfo imageInfo = new ImageInfo();
                 imageInfo.imageFile = imageFile;

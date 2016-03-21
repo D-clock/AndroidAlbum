@@ -1,9 +1,7 @@
 package com.clock.album.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +10,13 @@ import android.widget.ListView;
 
 import com.clock.album.R;
 import com.clock.album.adapter.AlbumFolderAdapter;
-import com.clock.album.entity.AlbumInfo;
+import com.clock.album.entity.AlbumFolderInfo;
 import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.fragment.base.BaseFragment;
+import com.clock.album.view.AlbumView;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +29,11 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
 
     private static final String ARG_PARAM1 = "param1";
 
-    private OnAlbumDetailInteractionListener mInteractionListener;
+    private AlbumView mAlbumView;
     /**
      * 相册目录列表
      */
-    private List<AlbumInfo> mAlbumInfoList;
+    private List<AlbumFolderInfo> mAlbumFolderInfoList;
     private ListView mFolderListView;
 
     public AlbumFolderFragment() {
@@ -44,13 +41,13 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
     }
 
     /**
-     * @param albumInfoList 相册目录列表
+     * @param albumFolderInfoList 相册目录列表
      * @return
      */
-    public static AlbumFolderFragment newInstance(List<AlbumInfo> albumInfoList) {
+    public static AlbumFolderFragment newInstance(List<AlbumFolderInfo> albumFolderInfoList) {
         AlbumFolderFragment fragment = new AlbumFolderFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, (Serializable) albumInfoList);
+        args.putSerializable(ARG_PARAM1, (Serializable) albumFolderInfoList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +56,7 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mAlbumInfoList = (List<AlbumInfo>) getArguments().getSerializable(ARG_PARAM1);
+            mAlbumFolderInfoList = (List<AlbumFolderInfo>) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -69,7 +66,7 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
         View rootView = inflater.inflate(R.layout.fragment_album_directory, container, false);
         mFolderListView = (ListView) rootView.findViewById(R.id.list_album);
         ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader();
-        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumInfoList, loaderWrapper);
+        AlbumFolderAdapter albumFolderAdapter = new AlbumFolderAdapter(mAlbumFolderInfoList, loaderWrapper);
         mFolderListView.setAdapter(albumFolderAdapter);
         mFolderListView.setOnItemClickListener(this);
         return rootView;
@@ -79,44 +76,25 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnAlbumDetailInteractionListener) {
-            mInteractionListener = (OnAlbumDetailInteractionListener) context;
+        if (context instanceof AlbumView) {
+            mAlbumView = (AlbumView) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mInteractionListener = null;
+        mAlbumView = null;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (parent == mFolderListView) {
-            if (mInteractionListener != null) {
-                AlbumInfo albumInfo = mAlbumInfoList.get(position);
-                mInteractionListener.switchAlbumFolder(albumInfo.getFolder());
-                mInteractionListener.refreshFolderName(albumInfo.getFolder().getName());
+            if (mAlbumView != null) {
+                AlbumFolderInfo albumFolderInfo = mAlbumFolderInfoList.get(position);
+                mAlbumView.switchAlbumFolder(albumFolderInfo);
             }
         }
     }
 
-    /**
-     * 相册详情交互接口
-     */
-    public interface OnAlbumDetailInteractionListener {
-        /**
-         * 切换到相册详情页面
-         *
-         * @param albumFolder 指定相册的目录
-         */
-        public void switchAlbumFolder(File albumFolder);
-
-        /**
-         * 刷新目录名
-         *
-         * @param albumFolderName
-         */
-        public void refreshFolderName(String albumFolderName);
-    }
 }

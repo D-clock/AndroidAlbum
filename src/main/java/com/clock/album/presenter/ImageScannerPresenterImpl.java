@@ -31,7 +31,7 @@ public class ImageScannerPresenterImpl implements ImageScannerPresenter {
             public void onFinish(ImageScanResult imageScanResult) {
                 if (mAlbumView != null) {
                     AlbumViewData albumData = mScannerModel.archiveAlbumInfo(context, imageScanResult);
-                    mAlbumView.setAlbumData(albumData);
+                    mAlbumView.refreshAlbumData(albumData);
                 }
             }
         });

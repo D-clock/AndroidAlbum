@@ -1,6 +1,11 @@
 # 开源项目AndroidAlbum开发实践小结
 
-借阅文章：
+
+## MVC 还是 MVP
+
+## 第三方框架
+
+## 借阅文章：
 
 http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html
 

@@ -17,11 +17,9 @@ import com.clock.album.imageloader.ImageLoaderFactory;
 import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.activity.ImagePreviewActivity;
 import com.clock.album.ui.fragment.base.BaseFragment;
-import com.clock.album.ui.interaction.ImagePreviewInteraction;
+import com.clock.album.view.ImageChooseView;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,20 +28,20 @@ import java.util.List;
  * @author Clock
  * @since 2016-01-17
  */
-public class AlbumDetailFragment extends BaseFragment {
+public class AlbumDetailFragment extends BaseFragment implements AlbumGridAdapter.OnClickPreviewImageListener {
 
     public static final int PREVIEW_REQUEST_CODE = 1000;
 
     private static final String ARG_PARAM1 = "param1";
 
     /**
-     * 图片选择交互接口
+     * 图片选择View层交互接口
      */
-    private OnImageSelectedInteractionListener mOnImageSelectedInteractionListener;
+    private ImageChooseView mImageChooseView;
     /**
      * 相册信息列表
      */
-    private ArrayList<ImageInfo> mImageInfoList;
+    private List<ImageInfo> mImageInfoList;
     /**
      * 相册视图控件
      */
@@ -54,10 +52,10 @@ public class AlbumDetailFragment extends BaseFragment {
      * @param imageInfoList 相册列表
      * @return
      */
-    public static AlbumDetailFragment newInstance(ArrayList<ImageInfo> imageInfoList) {
+    public static AlbumDetailFragment newInstance(List<ImageInfo> imageInfoList) {
         AlbumDetailFragment fragment = new AlbumDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, imageInfoList);
+        args.putSerializable(ARG_PARAM1, (Serializable) imageInfoList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +68,7 @@ public class AlbumDetailFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mImageInfoList = (ArrayList<ImageInfo>) getArguments().getSerializable(ARG_PARAM1);
+            mImageInfoList = (List<ImageInfo>) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -80,8 +78,7 @@ public class AlbumDetailFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_album_detail, container, false);
         mAlbumGridView = (GridView) rootView.findViewById(R.id.gv_album);
         ImageLoaderWrapper loaderWrapper = ImageLoaderFactory.getLoader();
-        mAlbumGridViewAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mOnImageSelectedInteractionListener,
-                new ImagePreviewInteractionImpl());
+        mAlbumGridViewAdapter = new AlbumGridAdapter(mImageInfoList, loaderWrapper, mImageChooseView, this);
         mAlbumGridView.setAdapter(mAlbumGridViewAdapter);
         return rootView;
     }
@@ -89,15 +86,15 @@ public class AlbumDetailFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnImageSelectedInteractionListener) {
-            mOnImageSelectedInteractionListener = (OnImageSelectedInteractionListener) context;
+        if (context instanceof ImageChooseView) {
+            mImageChooseView = (ImageChooseView) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mOnImageSelectedInteractionListener = null;
+        mImageChooseView = null;
     }
 
     @Override
@@ -122,49 +119,19 @@ public class AlbumDetailFragment extends BaseFragment {
             ImageInfo srcImageInfo = newSelectedImageList.get(imagePos);
             ImageInfo destImageInfo = mImageInfoList.get(imagePos);
             destImageInfo.setIsSelected(srcImageInfo.isSelected());//遍历更新选中的状态
-            if (mOnImageSelectedInteractionListener != null) {
-                if (destImageInfo.isSelected()) {
-                    mOnImageSelectedInteractionListener.onSelected(destImageInfo.getImageFile());
-                } else {
-                    mOnImageSelectedInteractionListener.onUnSelected(destImageInfo.getImageFile());
-                }
+            if (mImageChooseView != null) {
+                mImageChooseView.refreshSelectedCounter(destImageInfo);
             }
         }
         mAlbumGridViewAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * 图片预览交互接口实现
-     */
-    private class ImagePreviewInteractionImpl implements ImagePreviewInteraction {
-
-        @Override
-        public void previewImage(ImageInfo imageInfo) {
-            Intent previewIntent = new Intent(getContext(), ImagePreviewActivity.class);
-            previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO, imageInfo);
-            previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO_LIST, (Serializable) mImageInfoList);
-            startActivityForResult(previewIntent, PREVIEW_REQUEST_CODE);
-        }
+    @Override
+    public void onClickPreview(ImageInfo imageInfo) {
+        Intent previewIntent = new Intent(getContext(), ImagePreviewActivity.class);
+        previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO, imageInfo);
+        previewIntent.putExtra(ImagePreviewActivity.EXTRA_IMAGE_INFO_LIST, (Serializable) mImageInfoList);
+        startActivityForResult(previewIntent, PREVIEW_REQUEST_CODE);
     }
 
-    /**
-     * 图片选择交互交互接口
-     */
-    public interface OnImageSelectedInteractionListener {
-
-        /**
-         * 选中一张图片
-         *
-         * @param imageFile 被选中的图片
-         */
-        public void onSelected(File imageFile);
-
-        /**
-         * 取消选中的图片
-         *
-         * @param imageFile 被取消选择的图片
-         */
-        public void onUnSelected(File imageFile);
-
-    }
 }

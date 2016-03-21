@@ -1,5 +1,6 @@
 package com.clock.album.view;
 
+import com.clock.album.entity.AlbumFolderInfo;
 import com.clock.album.view.entity.AlbumViewData;
 
 /**
@@ -8,9 +9,17 @@ import com.clock.album.view.entity.AlbumViewData;
 public interface AlbumView {
 
     /**
-     * 设置相册数据信息
+     * 刷新相册数据信息
      *
      * @param albumData
      */
-    public void setAlbumData(AlbumViewData albumData);
+    public void refreshAlbumData(AlbumViewData albumData);
+
+    /**
+     * 切换图片目录
+     *
+     * @param albumFolderInfo 指定图片目录的信息
+     */
+    public void switchAlbumFolder(AlbumFolderInfo albumFolderInfo);
+
 }
