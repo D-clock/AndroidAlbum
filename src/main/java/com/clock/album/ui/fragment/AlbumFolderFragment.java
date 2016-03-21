@@ -18,7 +18,9 @@ import com.clock.album.imageloader.ImageLoaderWrapper;
 import com.clock.album.ui.fragment.base.BaseFragment;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 相册目录页面
@@ -34,7 +36,7 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
     /**
      * 相册目录列表
      */
-    private ArrayList<AlbumInfo> mAlbumInfoList;
+    private List<AlbumInfo> mAlbumInfoList;
     private ListView mFolderListView;
 
     public AlbumFolderFragment() {
@@ -45,10 +47,10 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
      * @param albumInfoList 相册目录列表
      * @return
      */
-    public static AlbumFolderFragment newInstance(ArrayList<AlbumInfo> albumInfoList) {
+    public static AlbumFolderFragment newInstance(List<AlbumInfo> albumInfoList) {
         AlbumFolderFragment fragment = new AlbumFolderFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, albumInfoList);
+        args.putSerializable(ARG_PARAM1, (Serializable) albumInfoList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +59,7 @@ public class AlbumFolderFragment extends BaseFragment implements AdapterView.OnI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mAlbumInfoList = (ArrayList<AlbumInfo>) getArguments().getSerializable(ARG_PARAM1);
+            mAlbumInfoList = (List<AlbumInfo>) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 

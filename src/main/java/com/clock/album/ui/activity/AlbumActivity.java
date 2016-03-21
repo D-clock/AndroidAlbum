@@ -11,12 +11,14 @@ import android.widget.TextView;
 import com.clock.album.R;
 import com.clock.album.entity.AlbumInfo;
 import com.clock.album.entity.ImageInfo;
-import com.clock.album.deprecated.ImageScanner;
-import com.clock.album.deprecated.ImageScannerPresenter;
+import com.clock.album.presenter.ImageScannerPresenter;
+import com.clock.album.presenter.ImageScannerPresenterImpl;
 import com.clock.album.ui.activity.base.BaseActivity;
 import com.clock.album.ui.fragment.AlbumDetailFragment;
 import com.clock.album.ui.fragment.AlbumFolderFragment;
 import com.clock.album.ui.interaction.ImageScannerInteraction;
+import com.clock.album.view.AlbumView;
+import com.clock.album.view.entity.AlbumViewData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import java.util.Set;
  * @since 2016-01-06
  */
 public class AlbumActivity extends BaseActivity implements View.OnClickListener, AlbumFolderFragment.OnAlbumDetailInteractionListener,
-        AlbumDetailFragment.OnImageSelectedInteractionListener {
+        AlbumDetailFragment.OnImageSelectedInteractionListener, AlbumView {
 
     private final static String TAG = AlbumActivity.class.getSimpleName();
 
@@ -55,10 +57,10 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 图片的总数
      */
-    private int mImageTotalCount = 0;
+    private int mImageTotal = 0;
 
     private ImageScannerPresenter mImageScannerPresenter;
-    private ImageScannerInteraction mImageScannerInteraction;
+
     /**
      * 显示图片目录的名称，选中图片的按钮
      */
@@ -75,10 +77,8 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
 
         findViewById(R.id.iv_back).setOnClickListener(this);
 
-        mImageScannerInteraction = new ImageScannerInteractionImpl();
-
-        mImageScannerPresenter = new ImageScanner(getApplicationContext());
-        mImageScannerPresenter.scanExternalStorage(getSupportLoaderManager(), mImageScannerInteraction);
+        mImageScannerPresenter = new ImageScannerPresenterImpl(this);
+        mImageScannerPresenter.startScanImage(getApplicationContext(), getSupportLoaderManager());
 
     }
 
@@ -164,61 +164,22 @@ public class AlbumActivity extends BaseActivity implements View.OnClickListener,
 
         } else {
             String selectedStringFormat = getString(R.string.selected_ok);
-            String selectedString = String.format(selectedStringFormat, mSelectedImageFileList.size(), mImageTotalCount);
+            String selectedString = String.format(selectedStringFormat, mSelectedImageFileList.size(), mImageTotal);
             mSelectedView.setText(selectedString);
             mSelectedView.setVisibility(View.VISIBLE);
 
         }
     }
 
-    /**
-     * 图片扫描交互接口实现
-     */
-    private class ImageScannerInteractionImpl implements ImageScannerInteraction {
+    @Override
+    public void setAlbumData(AlbumViewData albumData) {
+        if (albumData != null) {
+            mAlbumImageInfoListMap = albumData.getAlbumImageInfoListMap();
+            mImageTotal = albumData.getImageTotal();
 
-        @Override
-        public void refreshImageInfo(List<File> albumFolderList, Map<String, ArrayList<File>> albumImageListMap) {
-            if (albumFolderList != null && albumFolderList.size() > 0) {
-
-                ArrayList<AlbumInfo> albumInfoArrayList = new ArrayList<>();
-                AlbumInfo totalImageAlbumInfo = new AlbumInfo();//放全部图片文件目录的信息
-                File totalImageAlbumFolder = new File("/" + getString(R.string.all_image));//用来存放所有图片的虚拟文件夹，实际在SD卡上是不存在的
-                totalImageAlbumInfo.setFolder(totalImageAlbumFolder);
-                albumInfoArrayList.add(totalImageAlbumInfo);
-                int totalImageCounter = 0;
-
-                ArrayList<ImageInfo> totalImageInfoList = new ArrayList<>();
-                mAlbumImageInfoListMap = new HashMap<>();
-                mAlbumImageInfoListMap.put(totalImageAlbumFolder.getAbsolutePath(), totalImageInfoList);//全部图片
-
-                Set<String> albumKeySet = albumImageListMap.keySet();
-                for (String albumKey : albumKeySet) {//每个目录的图片
-                    ArrayList<ImageInfo> imageInfoArrayList = ImageInfo.buildFromFileList(albumImageListMap.get(albumKey));
-                    mAlbumImageInfoListMap.put(albumKey, imageInfoArrayList);
-                }
-
-                int albumFolderSize = albumFolderList.size();
-                for (int albumFolderPos = 0; albumFolderPos < albumFolderSize; albumFolderPos++) {
-                    File albumFolder = albumFolderList.get(albumFolderPos);
-                    AlbumInfo albumInfo = new AlbumInfo();
-                    albumInfo.setFolder(albumFolder);
-                    String albumPath = albumFolder.getAbsolutePath();
-                    ArrayList<ImageInfo> imageInfoList = mAlbumImageInfoListMap.get(albumPath);
-                    albumInfo.setFrontCover(imageInfoList.get(0).getImageFile());//设置相册的封面
-                    albumInfo.setFileCount(imageInfoList.size());
-                    albumInfoArrayList.add(albumInfo);
-                    if (albumFolderPos == 0) {//设置"全部图片目录"的封面
-                        totalImageAlbumInfo.setFrontCover(imageInfoList.get(0).getImageFile());
-                    }
-                    totalImageCounter = totalImageCounter + imageInfoList.size();//计算所有图片的总数
-                    totalImageInfoList.addAll(imageInfoList);//添加所有图片汇总
-                }
-                mImageTotalCount = totalImageCounter;
-                totalImageAlbumInfo.setFileCount(totalImageCounter);
-
-                mAlbumFolderFragment = AlbumFolderFragment.newInstance(albumInfoArrayList);
-                switchAlbumFolderList();
-            }
+            List<AlbumInfo> albumInfoList = albumData.getAlbumInfoList();
+            mAlbumFolderFragment = AlbumFolderFragment.newInstance(albumInfoList);
+            switchAlbumFolderList();
         }
     }
 }
