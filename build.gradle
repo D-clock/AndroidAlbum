@@ -13,7 +13,7 @@ android {
         versionName "1.0"
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
     }
     buildTypes {
@@ -41,7 +41,7 @@ dependencies {
     compile(name: 'photoview-release-1.2.4', ext: 'aar')
 }
 
-bugly{
+bugly {
     appId = "900019014" //注册时分配的App ID
     appKey = "2XQMAyk12EBhkUUa" //注册时分配的App Key
 }
