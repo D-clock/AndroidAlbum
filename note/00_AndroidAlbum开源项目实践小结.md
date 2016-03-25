@@ -1,5 +1,8 @@
-# 开源项目AndroidAlbum开发实践小结
+# 我的 Android 开源项目实战总结
 
+
+
+## 不重复制造车轮
 
 ## MVC 还是 MVP
 
