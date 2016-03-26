@@ -7,6 +7,7 @@ package com.clock.album.imageloader;
  */
 public class ImageLoaderFactory {
 
+    private static ImageLoaderWrapper sInstance;
 
     private ImageLoaderFactory() {
 
@@ -18,6 +19,13 @@ public class ImageLoaderFactory {
      * @return
      */
     public static ImageLoaderWrapper getLoader() {
-        return new UniversalAndroidImageLoader();//<link>https://github.com/nostra13/Android-Universal-Image-Loader</link>
+        if (sInstance == null) {
+            synchronized (ImageLoaderFactory.class) {
+                if (sInstance == null) {
+                    sInstance = new UniversalAndroidImageLoader();//<link>https://github.com/nostra13/Android-Universal-Image-Loader</link>
+                }
+            }
+        }
+        return sInstance;
     }
 }
