@@ -45,7 +45,12 @@ public class UniversalAndroidImageLoader implements ImageLoaderWrapper {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        String uri = ImageDownloader.Scheme.FILE.wrap(imageFile.getAbsolutePath());
+        String uri;
+        if (imageFile == null) {
+            uri = "";
+        } else {
+            uri = ImageDownloader.Scheme.FILE.wrap(imageFile.getAbsolutePath());
+        }
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
 

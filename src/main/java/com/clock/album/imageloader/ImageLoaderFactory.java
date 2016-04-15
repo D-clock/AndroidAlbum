@@ -7,7 +7,7 @@ package com.clock.album.imageloader;
  */
 public class ImageLoaderFactory {
 
-    private static ImageLoaderWrapper sInstance;
+    private static volatile ImageLoaderWrapper sInstance;
 
     private ImageLoaderFactory() {
 
