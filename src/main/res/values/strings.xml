@@ -15,4 +15,5 @@
     <string name="quit">退出</string>
     <string name="settings">设置</string>
     <string name="no_image">没有相册图片</string>
+    <string name="take_photo_from_camera">调用系统相机拍照</string>
 </resources>

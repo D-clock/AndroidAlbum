@@ -15,6 +15,12 @@
         android:text="@string/local_image_selector" />
 
     <Button
+        android:id="@+id/btn_take_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/take_photo_from_camera" />
+
+    <Button
         android:id="@+id/btn_image_loader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

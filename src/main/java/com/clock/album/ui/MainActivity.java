@@ -1,15 +1,12 @@
 package com.clock.album.ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.clock.album.R;
 import com.clock.album.ui.activity.AlbumActivity;
-import com.tencent.bugly.crashreport.CrashReport;
-
-import junit.framework.Test;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -20,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.btn_system_album).setOnClickListener(this);
         findViewById(R.id.btn_image_loader).setOnClickListener(this);
+        findViewById(R.id.btn_take_photo).setOnClickListener(this);
 
     }
 
@@ -32,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(albumIntent);
 
         } else if (viewId == R.id.btn_image_loader) {//网络图片加载（各大加载图片框架的实现）
+
+        } else if (viewId == R.id.btn_take_photo) {//调用系统相机拍照
 
         }
     }
