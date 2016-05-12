@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.clock.album.R;
 import com.clock.album.ui.activity.AlbumActivity;
+import com.clock.album.ui.activity.TakePhotoActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (viewId == R.id.btn_take_photo) {//调用系统相机拍照
 
+            Intent takePhotoIntent = new Intent(this, TakePhotoActivity.class);
+            startActivity(takePhotoIntent);
         }
     }
 }
