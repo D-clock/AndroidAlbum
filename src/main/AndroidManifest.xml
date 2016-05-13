@@ -37,9 +37,6 @@
             android:name=".ui.activity.ImageSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AlbumTheme" />
-        <activity
-            android:name=".ui.activity.TakePhotoActivity"
-            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
