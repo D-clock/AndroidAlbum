@@ -7,6 +7,6 @@
         <!-- 设置导航栏透明 -->
         <item name="android:windowTranslucentNavigation">true</item>
         <!-- 把通知栏的颜色设置成为透明的 -->
-        <item name="android:statusBarColor">#028ce5</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

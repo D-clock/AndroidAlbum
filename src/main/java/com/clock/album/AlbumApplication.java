@@ -1,6 +1,7 @@
 package com.clock.album;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.clock.album.crash.SimpleCrashReporter;
 import com.clock.album.imageloader.UniversalAndroidImageLoader;
@@ -50,5 +51,7 @@ public class AlbumApplication extends Application {
      */
     private void initBuglyConfig() {
         CrashReport.initCrashReport(getApplicationContext(), "900019014", false);
+        String buglyVersion = CrashReport.getBuglyVersion(getApplicationContext());
+        Log.i("Bugly", "current bugly version: " + buglyVersion);
     }
 }

@@ -1,15 +1,12 @@
 package com.clock.album.ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.clock.album.R;
 import com.clock.album.ui.activity.AlbumActivity;
-import com.tencent.bugly.crashreport.CrashReport;
-
-import junit.framework.Test;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

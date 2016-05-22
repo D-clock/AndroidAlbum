@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#028ce5"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -47,6 +48,14 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
 
+    <TextView
+        android:id="@+id/tv_no_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_image"
+        android:visibility="gone" />
 </LinearLayout>
