@@ -33,7 +33,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    //compile project(':androidutils')
+    //compile project(':AndroidUtils')
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
