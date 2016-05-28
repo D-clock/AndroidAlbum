@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.clock.album.crash.SimpleCrashReporter;
 import com.clock.album.imageloader.UniversalAndroidImageLoader;
+import com.clock.album.manager.FolderManager;
 import com.clock.utils.crash.CrashExceptionHandler;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -13,14 +14,6 @@ import com.tencent.bugly.crashreport.CrashReport;
  */
 public class AlbumApplication extends Application {
 
-    /**
-     * app在sd卡的主目录
-     */
-    private final static String APP_MAIN_FOLDER_NAME = "album";
-    /**
-     * 本地存放闪退日志的目录
-     */
-    private final static String CRASH_FOLDER_NAME = "crash";
 
     @Override
     public void onCreate() {
@@ -40,7 +33,7 @@ public class AlbumApplication extends Application {
      * 配置奔溃信息的搜集
      */
     private void configCollectCrashInfo() {
-        CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, APP_MAIN_FOLDER_NAME, CRASH_FOLDER_NAME);
+        CrashExceptionHandler crashExceptionHandler = new CrashExceptionHandler(this, FolderManager.getCrashLogFolder());
         CrashExceptionHandler.CrashExceptionRemoteReport remoteReport = new SimpleCrashReporter();
         crashExceptionHandler.configRemoteReport(remoteReport); //设置友盟统计报错日志回传到远程服务器上
         Thread.setDefaultUncaughtExceptionHandler(crashExceptionHandler);

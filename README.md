@@ -2,9 +2,10 @@
 
 库如其名，做过企业的应用已经有三四个，但凡所有应用基本都有跳转到相册或者调用系统拍照的功能（例如所有应用都可以上传头像）。因此，为了方便公司或者自己的开发，抽空准备整理出一个比较完善的库，方便以后开发可以随时拉取代码。如果你对这部分的代码感兴趣，欢迎引入使用，如果引用过程中发现遇到什么闪退，麻烦在Github上给我提个issue，我会尽快定位修复。**需要导入工程运行的童鞋，请详细阅读下方的编译须知部分内容**
 
-## 最新更新（最后编辑于2016-05-11）
+## 最新更新（最后编辑于2016-05-28）
 
-- 修复在 Android 4.4 平台上，通知栏显示成白色的BUG
+- 优化代码结构
+- 优化项目导入体验
 
 ## 目前已有功能
 
@@ -89,8 +90,8 @@ Error: NDK integration is deprecated in the current plugin.  Consider trying the
 
 至于其他关于bugly的问题，就需要自己去官网找答案了！
 
-* 目前，为方便个人开发修改和复用，一些实用工具类代码都整合到我的[AndroidUtils](https://github.com/D-clock/AndroidUtils)项目中。所以需要clone该库的代码导入IDE，作为AndroidAlbum的Library！
+* 本库libs下有个**AndroidUtils.aar**的依赖包，是由[AndroidUtils](https://github.com/D-clock/AndroidUtils)代码编译生成，想要查看**AndroidUtils.aar**中的源代码，可以参考[这里](https://github.com/D-clock/Doc/blob/master/Android/%E4%B8%AA%E4%BA%BA%E6%94%B6%E8%97%8F/%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8Baar%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81.md)的方式进行导入。
 
-* 当前导入的[Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)框架，版本是1.9.5，是以jar包的方式导入。
+* 本库当前使用的[Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)框架版本是1.9.5，是以jar包的方式导入。
 
-* [PhotoView](https://github.com/chrisbanes/PhotoView)自定义控件的版本是1.2.4,以aar的方式导入。
+* 本库当前使用的[PhotoView](https://github.com/chrisbanes/PhotoView)自定义控件的版本是1.2.4，以aar的方式导入。
