@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">AndroidAlbum</string>
+    <string name="local_image_selector">本地图片选择器</string>
+    <string name="load_net_image">网络图片加载</string>
+    <string name="all_image">全部图片</string>
+    <string name="selected_image">选中的图片</string>
+    <string name="selected_ok">确定 (%1$s/%2$s)</string>
+    <string name="selected">选中</string>
+    <string name="image_index">%1$s/%2$s</string>
+    <string name="grant_permission_success">授权成功，正在读取相册</string>
+    <string name="grant_permission_failure">授权失败，无法读取相册</string>
+    <string name="grant_advice_read_album">建议授予获取相册的权限</string>
+    <string name="help">系统权限</string>
+    <string name="help_content">缺少读取系统相册的权限，请点击 "设置" - "权限" 授予应用权限</string>
+    <string name="quit">退出</string>
+    <string name="settings">设置</string>
+    <string name="no_image">没有相册图片</string>
+    <string name="take_photo_from_camera">调用系统相机拍照</string>
+</resources>

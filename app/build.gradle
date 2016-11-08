@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+apply plugin: 'bugly' //添加Bugly符号表插件
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "com.clock.album"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs' //this way we can find the .aar file in libs folder
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile files('libs/universal-image-loader-1.9.5.jar')
+    compile(name: 'photoview-release-1.2.4', ext: 'aar')
+    compile(name: 'AndroidUtils', ext: 'aar')
+}
+
+bugly {
+    appId = "900019014" //注册时分配的App ID
+    appKey = "2XQMAyk12EBhkUUa" //注册时分配的App Key
+}
